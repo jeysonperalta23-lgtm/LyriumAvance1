@@ -1,0 +1,723 @@
+/* =============================================
+   0. ESTILOS BASE Y RESET
+   ============================================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body { 
+    width: 100%; 
+    overflow-x: hidden; 
+    font-family: 'Karla', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    color: #415161;
+    background-color: #f4f5f6;
+}
+
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.full-bleed {
+    width: 100vw;
+    max-width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+    position: relative;
+}
+
+/* =============================================
+   1. ESTILOS GENERALES Y HERO (Full Width)
+   ============================================= */
+
+/* Parallax (Solo PC) */
+.hero-parallax {
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+}
+@media (min-width: 1024px) { .hero-parallax { background-attachment: fixed; } }
+@media (max-width: 1023px) { .hero-parallax { background-attachment: scroll; } }
+
+/* =============================================
+   2. SECCIÓN DOCTORA (Adaptable y Segura)
+   ============================================= */
+.hero-doctora {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr; /* PC: Texto izq | Foto der */
+    gap: 2.5rem;
+    align-items: center;
+    padding: 4rem 0;
+    
+    /* SEGURIDAD PARA QUE NO SE SALGA */
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+text-2xl md:text-4xl lg:text-5xl font-semibold leading-tight{
+  color:#f1f5f9;
+}
+
+.doctora-wrapper {
+    position: relative;
+    display: inline-block;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 18px 45px rgba(15, 23, 42, .18);
+    transition: transform 0.3s ease;
+    width: 100%; 
+    max-width: 100%; /* Evita desborde de imagen */
+}
+
+.doctora-img {
+    width: 100%;
+    height: auto;
+    display: block;
+    transition: transform .75s ease;
+}
+
+.doctora-wrapper:hover .doctora-img { 
+    transform: scale(1.06); 
+}
+
+/* TEXTOS HERO */
+.texto-hero {
+    /* Asegura que el contenedor de texto respete el ancho */
+    .texto-hero { padding-right: 20px; }
+    .texto-hero h2 { font-size: 2.8rem; line-height: 1.1; color: #415161; margin-bottom: 20px; font-weight: 800; }
+    .texto-hero p { color: #556070; line-height: 1.8; font-size: 16px; margin-bottom: 30px; }
+    align-self: flex-start;
+}
+
+
+.tag-hero {
+    display: inline-block;
+    font-size: 12px;
+    letter-spacing: .35em;
+    text-transform: uppercase;
+    color: #3094b4;
+    margin-bottom: .75rem;
+    font-weight: 700;
+}
+
+.texto-hero h1 {
+    font-size: 2.8rem;
+    line-height: 1.2;
+    margin-bottom: 1.5rem;
+    color: #415161;
+    overflow-wrap: break-word; /* Evita que palabras largas rompan */
+}
+
+.texto-hero p {
+    color: #334155;
+    line-height: 1.7;
+    font-size: 18px;
+    margin-bottom: 1.5rem;
+    
+    /* CLAVE: Evita desbordes de texto */
+    max-width: 100%;
+    overflow-wrap: break-word; 
+}
+
+.btn-primary {
+    display: inline-block;
+    background-color: #3094b4;
+    color: white;
+    padding: 12px 30px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 500;
+    border: 2px solid #3094b4;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #168eb6;
+    border-color: #168eb6;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(48, 148, 180, 0.3);
+}
+
+/* =============================================
+   3. TIMELINE (Línea de Tiempo) - ESTRUCTURA
+   ============================================= */
+.timeline-section { padding: 4rem 0; background: #fff; }
+    .timeline { 
+        --lineGap: 14px; position: relative; max-width: 1200px; margin: 0 auto; 
+        counter-reset: tarjeta-counter; padding: 0 20px;
+    }
+    
+    /* Línea central */
+    .timeline::before { 
+        content: ""; position: absolute; top: 0; bottom: 0; width: 4px; 
+        left: 50%; margin-left: -2px; background: #e2e8f0; border-radius: 4px;
+    }
+
+    .timeline-row { 
+        display: grid; grid-template-columns: 1fr 80px 1fr; align-items: center; margin-bottom: 50px; 
+    }
+    
+    /* Iconos centrales */
+    .timeline-mid { position: relative; height: 100%; display: flex; justify-content: center; align-items: center; }
+    .timeline-icon { 
+        width: 50px; height: 50px; border-radius: 50%; 
+        background: #fff; border: 4px solid #fff; 
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        display: flex; justify-content: center; align-items: center;
+        z-index: 5; color: #3094b4;
+    }
+    .timeline-icon svg { width: 20px; height: 20px; fill: currentColor; }
+    
+    /* Tarjetas */
+    .timeline-card {
+        background: #fff; border: 1px solid #f1f5f9; border-radius: 20px; padding: 30px;
+        width: 100%; position: relative; box-shadow: 0 10px 30px -5px rgba(0,0,0,0.05);
+        transition: 0.3s;
+    }
+    .timeline-card:hover { transform: translateY(-5px); box-shadow: 0 20px 40px -5px rgba(0,0,0,0.1); }
+    
+    .timeline-card h3 { color: #1e293b; font-size: 1.25rem; font-weight: 700; margin-bottom: 10px; }
+    .timeline-card p { color: #64748b; font-size: 0.95rem; line-height: 1.6; margin: 0; }
+
+    /* Número Flotante */
+    .timeline-card::before {
+        counter-increment: tarjeta-counter; content: counter(tarjeta-counter);
+        position: absolute; top: -15px; width: 32px; height: 32px;
+        background: #3094b4; color: #fff; font-weight: 700; font-size: 14px;
+        display: grid; place-items: center; border-radius: 50%; 
+        border: 3px solid #fff; box-shadow: 0 4px 10px rgba(48, 148, 180, 0.4);
+    }
+    /* Posición del número según lado */
+    .timeline-left .timeline-card::before { right: -15px; }
+    .timeline-right .timeline-card::before { left: -15px; }
+
+
+
+/* =============================================
+   4. DISEÑO DE LAS TARJETAS
+   ============================================= */
+.timeline-card {
+    background: #ffffff !important; 
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+    border-radius: 20px;
+    
+    padding: 30px;
+    width: 520px;
+    max-width: 100%; /* IMPORTANTE PARA QUE NO SE SALGA */
+    height: auto; 
+    
+    position: relative;
+    overflow: visible; 
+    transition: transform 0.3s ease;
+    box-sizing: border-box; /* IMPORTANTE */
+}
+
+.timeline-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 35px -5px rgba(0, 0, 0, 0.15);
+}
+
+.timeline-card h3 {
+    color: #1e293b; 
+    font-size: 1.35rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+.timeline-card p {
+    color: #64748b; 
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.timeline-card::before {
+    counter-increment: tarjeta-counter;
+    content: counter(tarjeta-counter);
+    position: absolute;
+    top: -15px;
+    left: -15px;
+    width: 36px;
+    height: 36px;
+    background: #0ea5e9; 
+    color: #fff;
+    font-weight: 800;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    border: 3px solid #fff;
+    box-shadow: 0 4px 12px rgba(14, 165, 233, 0.4);
+}
+
+/* Tarjetas del lado derecho tienen el número en el lado opuesto */
+.timeline-right .timeline-card::before {
+    left: auto;
+    right: -15px;
+}
+
+/* =============================================
+   5. SECCIÓN DE VALORES
+   ============================================= */
+.valores-section {
+    background-color: #f2f5f7;
+    padding: 80px 0;
+}
+
+.section-title {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.section-title h2 {
+    font-size: 2.5rem;
+    color: #415161;
+    margin-bottom: 20px;
+}
+
+.section-title p {
+    color: #64748b;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.valores-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin-top: 50px;
+}
+
+.valor-card {
+    background: white;
+    border-radius: 20px;
+    padding: 40px 30px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease;
+}
+
+.valor-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+}
+
+.valor-icon {
+    width: 70px;
+    height: 70px;
+    background: #3094b4;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 25px;
+    color: white;
+    font-size: 28px;
+}
+
+.valor-card h3 {
+    margin-bottom: 15px;
+    color: #415161;
+}
+
+.valor-card p {
+    color: #64748b;
+    line-height: 1.7;
+}
+
+/* =============================================
+   6. SECCIÓN LYRUM (Acróstico)
+   ============================================= */
+.lyrium-section {
+    background: linear-gradient(135deg, #3094b4 0%, #168eb6 100%);
+    color: white;
+    padding: 80px 0;
+}
+
+.lyrium-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    text-align: center;
+}
+
+.lyrium-item {
+    padding: 20px;
+}
+
+.lyrium-letter {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 10px;
+    color: white;
+}
+
+.lyrium-text {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    opacity: 0.9;
+}
+
+/* =============================================
+   7. HEADER Y NAVEGACIÓN
+   ============================================= */
+.header {
+    background-color: white;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 0;
+}
+
+.logo {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #3094b4;
+    text-decoration: none;
+}
+
+.nav-menu {
+    display: flex;
+    list-style: none;
+    gap: 30px;
+}
+
+.nav-link {
+    color: #415161;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    color: #3094b4;
+}
+
+.mobile-menu-btn {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #415161;
+    cursor: pointer;
+}
+
+/* =============================================
+   8. FOOTER
+   ============================================= */
+.footer {
+    background-color: #252325;
+    color: white;
+    padding: 60px 0 30px;
+}
+
+.footer-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 40px;
+    margin-bottom: 40px;
+}
+
+.footer-column h3 {
+    color: white;
+    margin-bottom: 20px;
+    font-size: 1.2rem;
+}
+
+.footer-links {
+    list-style: none;
+}
+
+.footer-links li {
+    margin-bottom: 10px;
+}
+
+.footer-links a {
+    color: #ccc;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer-links a:hover {
+    color: #3094b4;
+}
+
+.copyright {
+    text-align: center;
+    padding-top: 30px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    color: #ccc;
+    font-size: 0.9rem;
+}
+
+/* =============================================
+   9. AJUSTES PARA MÓVILES (SOLUCIÓN BORDES)
+   ============================================= */
+@media (max-width: 980px) {
+    
+    /* --- A. HERO DOCTORA --- */
+    .hero-doctora {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2rem;
+        padding-bottom: 2rem;
+        
+        /* ¡LA SOLUCIÓN! Padding lateral para que el texto no toque el borde */
+        padding-left: 24px !important;
+        padding-right: 24px !important;
+    }
+    
+    .hero-doctora > div {
+        /* Fuerza que los hijos (imagen y texto) respeten el ancho */
+        width: 100%;
+        max-width: 100%;
+    }
+
+    /* Imagen primero */
+    .doctora-wrapper {
+        order: -1; 
+        margin: 0 auto;
+        max-width: 400px; /* Limite de tamaño imagen en móvil */
+    }
+    
+    .texto-hero {
+        text-align: center;
+        width: 100%;
+        padding: 0; /* Ya tiene padding el padre */
+    }
+    
+    .texto-hero h1 { 
+        font-size: 2rem; /* Ajuste de título para móvil */
+    }
+    
+    .texto-hero p {
+        font-size: 16px; /* Tamaño de texto más cómodo en móvil */
+    }
+
+    /* --- B. TIMELINE MÓVIL --- */
+    .timeline {
+        padding: 0 20px; /* Margen de seguridad */
+        --midW: 60px; 
+    }
+
+    .timeline::before { 
+        left: 30px; 
+        transform: none; 
+    }
+    .timeline::after { 
+        display: none; 
+    }
+
+    .timeline-row {
+        grid-template-columns: var(--midW) 1fr;
+        gap: 0;
+        margin-bottom: 35px;
+        align-items: start;
+    }
+
+    .timeline-icon {
+        left: 30px !important;
+        transform: translateX(-50%) !important;
+        top: 20px;
+    }
+
+    .timeline-left, .timeline-right {
+        grid-column: 2;
+        width: 100%;
+        padding: 0;
+    }
+    .timeline-mid { 
+        grid-column: 1; 
+        grid-row: 1; 
+    }
+
+    .timeline-card {
+        width: 100% !important;
+        text-align: center !important; 
+        padding: 25px 20px;
+    }
+
+    .timeline-card::before {
+        left: 50%;
+        transform: translateX(-50%);
+        top: -18px;
+    }
+    
+    .timeline-right .timeline-card::before {
+        left: 50%;
+        right: auto;
+        transform: translateX(-50%);
+    }
+
+    /* --- C. SECCIÓN VALORES --- */
+    .valores-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .valor-card {
+        padding: 30px 20px;
+    }
+    
+    .section-title h2 {
+        font-size: 2rem;
+    }
+    
+    .section-title p {
+        padding: 0 15px;
+    }
+
+    /* --- D. SECCIÓN LYRUM --- */
+    .lyrium-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .lyrium-item {
+        padding: 15px;
+    }
+
+    /* --- E. HEADER MÓVIL --- */
+    .mobile-menu-btn {
+        display: block;
+    }
+
+    .nav-menu {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: white;
+        flex-direction: column;
+        padding: 20px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .nav-menu.active {
+        display: flex;
+    }
+
+    /* --- F. FOOTER MÓVIL --- */
+    .footer-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 30px;
+    }
+    
+    .footer {
+        padding: 40px 0 20px;
+    }
+}
+
+/* =============================================
+   10. TABLETS (entre 768px y 980px)
+   ============================================= */
+@media (min-width: 768px) and (max-width: 980px) {
+    .hero-doctora {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+    }
+    
+    .texto-hero {
+        text-align: center;
+        max-width: 700px;
+        margin: 0 auto;
+    }
+    
+    .doctora-wrapper {
+        max-width: 500px;
+        margin: 0 auto;
+    }
+    
+    .lyrium-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* =============================================
+   11. MÓVILES PEQUEÑOS (menos de 480px)
+   ============================================= */
+@media (max-width: 480px) {
+    .hero-doctora {
+        padding-left: 16px !important;
+        padding-right: 16px !important;
+    }
+    
+    .texto-hero h1 {
+        font-size: 1.8rem;
+    }
+    
+    .texto-hero p {
+        font-size: 15px;
+    }
+    
+    .lyrium-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .footer-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .timeline {
+        padding: 0 15px;
+    }
+}
+
+/* =============================================
+   12. ESTILOS ADICIONALES (Overlay y Hover)
+   ============================================= */
+.overlay-card {
+    background: rgba(105, 149, 221, 0.85);
+    color: white;
+    padding: 2rem 3rem;
+    border-radius: 1.5rem;
+    max-width: 450px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+.zoom-img { 
+    transition: transform 0.6s ease; 
+}
+.zoom-img:hover { 
+    transform: scale(1.1); 
+}
+
+.icono-hover { 
+    position: relative;
+    overflow: hidden;
+    border-radius: 50%;
+    background: #fff;
+    transition: all 0.4s ease;
+}
+.icono-hover .texto-hover {
+    position: absolute; 
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    display: flex; 
+    flex-direction: column;
+    align-items: center; 
+    justify-content: center;
+    text-align: center; 
+    padding: 10px;
+    opacity: 0; 
+    transform: translateY(20px);
+    transition: all 0.3s ease;
+}
+.icono-hover:hover .texto-hover { 
+    opacity: 1; 
+    transform: translateY(0); 
+}

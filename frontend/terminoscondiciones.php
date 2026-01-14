@@ -19,8 +19,8 @@ session_destroy();
   <main class="max-w-7xl mx-auto px-4 py-10 flex-1 space-y-10">
 
     <?php
-    $PDF_CLIENTE = 'frontend/pdf/cliente.pdf';
-    $PDF_VENDEDOR = 'frontend/pdf/vendedor.pdf';
+    $PDF_CLIENTE = 'pdf/cliente.pdf';
+    $PDF_VENDEDOR = 'pdf/vendedor.pdf';
 
     $TERMINOS = [
       'cliente' => [

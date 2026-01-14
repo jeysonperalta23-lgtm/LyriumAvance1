@@ -153,7 +153,7 @@ if (isset($_SESSION['tienda_id'])) {
           </select>
         </div>
 
-        <p class="text-xs text-gray-500">
+        <p class="  ">
           Al registrarte, aceptas nuestros 
           <a href="../terminoscondiciones.php" class="text-sky-500 underline">términos y condiciones</a> y 
           <a href="../politicasdeprivacidad.php" class="text-sky-500 underline">política de privacidad</a>.

@@ -1,12 +1,12 @@
 <!-- FOOTER -->
 <footer class="bg-sky-500 text-white mt-12">
-  <div class="max-w-7xl mx-auto px-4 py-10 grid grid-cols-1 md:grid-cols-4 lg:grid-cols-5 gap-8 text-base">
+  <div class="max-w-7xl mx-auto px-4 py-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-10 text-base">
 
-    <div class="space-y-4">
+    <div class="space-y-4 flex flex-col items-center md:items-start text-center md:text-left">
       <div class="flex items-center gap-2">
-        <img src="img/logo_lyrium_blanco_01-scaled.webp?v=<?php echo time(); ?>" alt="Lyrium" class="h-10">
+        <img src="img/logo_lyrium_blanco_01-scaled.webp?v=<?php echo time(); ?>" alt="Lyrium" class="h-10 md:h-12">
       </div>
-      <p class="text-sm text-sky-100">Biomarketplace de productos y servicios especializados.</p>
+      <p class="text-sm text-sky-100 max-w-xs">Biomarketplace de productos y servicios especializados.</p>
       <!-- Redes Sociales Lyrium -->
       <div class="flex items-center gap-4 mt-2">
 
@@ -34,47 +34,49 @@
       </div>
     </div>
 
-    <div>
-      <h3 class="font-semibold mb-3 text-base tracking-wide">CONTÁCTANOS</h3>
-      <p class="flex items-center gap-2 text-sm mb-2"><i class="ph-phone-call text-lg"></i> +51 937 093 420</p>
-      <p class="flex items-center gap-2 text-sm mb-2"><i class="ph-envelope-simple text-lg"></i>
-        ventas@lyriumbiomarketplace.com</p>
-    </div>
-
-    <div>
-      <h3 class="font-semibold mb-3 text-base tracking-wide">¿TE AYUDAMOS?</h3>
-      <ul class="space-y-2 text-sm">
-        <li><a href="preguntasfrecuentes.php" class="hover:underline">Preguntas frecuentes</a></li>
-        <li><a href="politicasdeprivacidad.php" class="hover:underline">Políticas de privacidad</a></li>
-        <li><a href="terminoscondiciones.php" class="hover:underline">Términos y condiciones</a></li>
-        <li><a href="libroreclamaciones.php" class="hover:underline">Libro de reclamaciones</a></li>
-      </ul>
-    </div>
-
-    <div>
-      <h3 class="font-semibold mb-3 text-base tracking-wide">INFORMACIÓN</h3>
-      <ul class="space-y-2 text-sm">
-        <li><a href="nosotros.php" class="hover:underline">Nosotros</a></li>
-        <li><a href="#" class="hover:underline">Tiendas registradas</a></li>
-        <li><a href="#" class="hover:underline">Contáctanos</a></li>
-      </ul>
-    </div>
-
-    <div>
-      <h3 class="font-semibold mb-3 text-base tracking-wide">MÉTODOS DE PAGO</h3>
-      <p class="text-sm mb-2">Aceptamos tarjetas:</p>
-      <div class="flex flex-wrap gap-2 text-sm">
-        <span class="px-2 py-1 rounded-full bg-sky-400/60">VISA</span>
-        <span class="px-2 py-1 rounded-full bg-sky-400/60">MasterCard</span>
-        <span class="px-2 py-1 rounded-full bg-sky-400/60">AmEx</span>
+    <div class="flex flex-col items-center md:items-start text-center md:text-left">
+      <h3 class="font-bold mb-4 text-[15px] tracking-widest text-white/90 uppercase">CONTÁCTANOS</h3>
+      <div class="space-y-3">
+        <p class="flex items-center justify-center md:justify-start gap-3 text-sm"><i class="ph-phone-call text-xl text-sky-200"></i> +51 937 093 420</p>
+        <p class="flex items-center justify-center md:justify-start gap-3 text-sm"><i class="ph-envelope-simple text-xl text-sky-200"></i>
+          ventas@lyriumbiomarketplace.com</p>
       </div>
-      <p class="flex items-center gap-2 text-sm mt-3"><i class="ph-lock-key text-lg"></i> Tienda 100% segura</p>
+    </div>
+
+    <div class="flex flex-col items-center md:items-start text-center md:text-left">
+      <h3 class="font-bold mb-4 text-[15px] tracking-widest text-white/90 uppercase">¿TE AYUDAMOS?</h3>
+      <ul class="space-y-3 text-sm">
+        <li><a href="preguntasfrecuentes.php" class="hover:text-sky-200 transition-colors">Preguntas frecuentes</a></li>
+        <li><a href="politicasdeprivacidad.php" class="hover:text-sky-200 transition-colors">Políticas de privacidad</a></li>
+        <li><a href="terminoscondiciones.php" class="hover:text-sky-200 transition-colors">Términos y condiciones</a></li>
+        <li><a href="libroreclamaciones.php" class="hover:text-sky-200 transition-colors">Libro de reclamaciones</a></li>
+      </ul>
+    </div>
+
+    <div class="flex flex-col items-center md:items-start text-center md:text-left">
+      <h3 class="font-bold mb-4 text-[15px] tracking-widest text-white/90 uppercase">INFORMACIÓN</h3>
+      <ul class="space-y-3 text-sm">
+        <li><a href="nosotros.php" class="hover:text-sky-200 transition-colors">Nosotros</a></li>
+        <li><a href="#" class="hover:text-sky-200 transition-colors">Tiendas registradas</a></li>
+        <li><a href="#" class="hover:text-sky-200 transition-colors">Contáctanos</a></li>
+      </ul>
+    </div>
+
+    <div class="flex flex-col items-center md:items-start text-center md:text-left">
+      <h3 class="font-bold mb-4 text-[15px] tracking-widest text-white/90 uppercase">MÉTODOS DE PAGO</h3>
+      <p class="text-sm mb-3 text-sky-100">Aceptamos tarjetas:</p>
+      <div class="flex flex-wrap justify-center md:justify-start gap-2 mb-4">
+        <span class="px-3 py-1 rounded-lg bg-white/10 border border-white/20 text-xs font-medium">VISA</span>
+        <span class="px-3 py-1 rounded-lg bg-white/10 border border-white/20 text-xs font-medium">MasterCard</span>
+        <span class="px-3 py-1 rounded-lg bg-white/10 border border-white/20 text-xs font-medium">AmEx</span>
+      </div>
+      <p class="flex items-center gap-2 text-sm text-sky-100"><i class="ph-lock-key text-xl"></i> Tienda 100% segura</p>
     </div>
   </div>
 
-  <div class="border-t border-white/30">
-    <div class="max-w-7xl mx-auto px-4 py-4 text-center text-sm tracking-wide">
-      © 2025 LYRIUM BIOMARKETPLACE y sus afiliados. Todos los derechos reservados.
+  <div class="border-t border-white/20">
+    <div class="max-w-7xl mx-auto px-4 py-6 text-center text-xs md:text-sm text-sky-100 tracking-wide">
+      © 2025 LYRIUM BIOMARKETPLACE y sus afiliados. <br class="md:hidden"> Todos los derechos reservados.
     </div>
   </div>
 </footer>

@@ -1,0 +1,227 @@
+/* ========================================
+   ANIMACIONES DE TRANSICIÓN DE BLOQUES
+   Sistema automático de animaciones para bloques de tienda
+   ======================================== */
+
+/* Variables de colores por tipo de bloque */
+:root {
+    --bloque-banner-bg: linear-gradient(to bottom, #f0f9ff 0%, #ffffff 100%);
+    --bloque-productos-bg: #ffffff;
+    --bloque-anuncios-bg: transparent;
+    /* Eliminado el fondo amarillo */
+    --bloque-grid-bg: #fafafa;
+    --bloque-sidebar-bg: linear-gradient(to bottom, #f8fafc 0%, #ffffff 100%);
+
+    --bloque-border-banner: #3b82f6;
+    --bloque-border-productos: #10b981;
+    --bloque-border-anuncios: #f59e0b;
+    --bloque-border-grid: #8b5cf6;
+    --bloque-border-sidebar: #6366f1;
+}
+
+/* Contenedor base de bloques */
+.tienda-bloque {
+    position: relative;
+    margin-bottom: 2rem;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Animación de entrada inicial */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeInRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Aplicar animaciones de entrada */
+.tienda-bloque {
+    animation: fadeInUp 0.6s ease-out forwards;
+    opacity: 0;
+}
+
+/* El Banner Principal no debe moverse ni animarse */
+.tienda-bloque[data-tipo="banner"] {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+}
+
+/* Delay escalonado para cada bloque */
+.tienda-bloque:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.tienda-bloque:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.tienda-bloque:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+.tienda-bloque:nth-child(4) {
+    animation-delay: 0.4s;
+}
+
+.tienda-bloque:nth-child(5) {
+    animation-delay: 0.5s;
+}
+
+.tienda-bloque:nth-child(6) {
+    animation-delay: 0.6s;
+}
+
+/* Colores de fondo sutiles por tipo */
+.tienda-bloque[data-tipo="banner"] {
+    background: var(--bloque-banner-bg);
+}
+
+.tienda-bloque[data-tipo="productos-scroll"] {
+    background: var(--bloque-productos-bg);
+}
+
+.tienda-bloque[data-tipo="anuncios"] {
+    background: var(--bloque-anuncios-bg);
+}
+
+.tienda-bloque[data-tipo="productos-grid"] {
+    background: var(--bloque-grid-bg);
+}
+
+.tienda-bloque[data-tipo="sidebar"] {
+    background: var(--bloque-sidebar-bg);
+}
+
+/* Animación de reorganización */
+@keyframes slideReorder {
+    0% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
+}
+
+.tienda-bloque.reordenando {
+    animation: slideReorder 0.5s ease-in-out;
+    z-index: 10;
+}
+
+/* Animaciones específicas por plantilla */
+
+/* Plantilla 1: Sidebar derecha - Bloques desde la izquierda */
+.layout-sidebar-right .tienda-bloque:not([data-tipo="banner"]) {
+    animation: fadeInLeft 0.6s ease-out forwards;
+}
+
+/* Plantilla 2: Sidebar izquierda - Bloques desde la derecha */
+.layout-sidebar-left .tienda-bloque:not([data-tipo="banner"]) {
+    animation: fadeInRight 0.6s ease-out forwards;
+}
+
+/* Plantilla 3: Full width - Bloques desde abajo (más dramático) */
+.layout-full-width .tienda-bloque:not([data-tipo="banner"]) {
+    animation: fadeInUp 0.8s ease-out forwards;
+}
+
+/* Transición suave al cambiar de plantilla */
+.tienda-container {
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Responsive: Reducir animaciones en móvil para mejor performance */
+@media (max-width: 768px) {
+    .tienda-bloque {
+        animation-duration: 0.4s;
+    }
+
+    .tienda-bloque::before {
+        display: none;
+        /* Ocultar etiquetas en móvil */
+    }
+}
+
+/* Modo reducido de movimiento (accesibilidad) */
+@media (prefers-reduced-motion: reduce) {
+
+    .tienda-bloque,
+    .tienda-bloque.reordenando {
+        animation: none;
+        transition: none;
+    }
+}
+
+/* Pulse animation para bloques nuevos o actualizados */
+@keyframes pulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.02);
+    }
+}
+
+.tienda-bloque.nuevo {
+    animation: pulse 0.6s ease-in-out 3;
+}
+
+/* Shimmer effect para loading state */
+@keyframes shimmer {
+    0% {
+        background-position: -1000px 0;
+    }
+
+    100% {
+        background-position: 1000px 0;
+    }
+}
+
+.tienda-bloque.cargando {
+    background: linear-gradient(90deg,
+            #f0f0f0 0%,
+            #f8f8f8 50%,
+            #f0f0f0 100%);
+    background-size: 1000px 100%;
+    animation: shimmer 2s infinite linear;
+}

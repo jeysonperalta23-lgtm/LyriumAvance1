@@ -1,0 +1,93 @@
+/* ========================================
+   SLIDER DE DESCUENTOS HORIZONTAL
+   Igual que el slider de publicidad
+   ======================================== */
+
+.slider-descuentos-horizontal {
+    width: 100%;
+    margin: 2rem 0;
+    overflow: hidden;
+}
+
+.slider-descuentos-container {
+    position: relative;
+    width: 100%;
+    height: 200px;
+    /* Mismo tamaño que publicidad */
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.slider-descuentos-track {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.slider-descuentos-slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.6s ease-in-out;
+    pointer-events: none;
+}
+
+.slider-descuentos-slide.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.slider-descuentos-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Indicadores */
+.slider-descuentos-dots {
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    z-index: 10;
+}
+
+.slider-descuentos-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 0;
+}
+
+.slider-descuentos-dot.active {
+    width: 24px;
+    border-radius: 4px;
+    background: #fff;
+}
+
+.slider-descuentos-dot:hover {
+    background: rgba(255, 255, 255, 0.8);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .slider-descuentos-container {
+        height: 150px;
+    }
+}
+
+@media (max-width: 480px) {
+    .slider-descuentos-container {
+        height: 120px;
+    }
+}

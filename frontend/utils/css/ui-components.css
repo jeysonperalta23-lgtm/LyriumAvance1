@@ -1,0 +1,129 @@
+/* =============================================================================
+   LYRIUM UI COMPONENTS - REUSABLE STYLES
+   ============================================================================= */
+
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -1000px 0;
+    }
+
+    100% {
+        background-position: 1000px 0;
+    }
+}
+
+@keyframes particleMove {
+    0% {
+        transform: translate(0, 0);
+    }
+
+    100% {
+        transform: translate(50px, 50px);
+    }
+}
+
+@keyframes shimmerLine {
+
+    0%,
+    100% {
+        background-position: 200% 0;
+        opacity: 0.3;
+    }
+
+    50% {
+        background-position: -200% 0;
+        opacity: 1;
+    }
+}
+
+.animate-in {
+    animation: fadeInUp 0.6s ease-out forwards;
+}
+
+/* Header Hero Pill - Estilo Premium */
+.lr-hero {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 24px;
+}
+
+.lr-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 28px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #0ea5e9, #38bdf8);
+    color: #fff;
+    box-shadow: 0 18px 35px rgba(14, 165, 233, .18);
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    font-size: clamp(20px, 2.6vw, 34px);
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Efecto de partículas decorativas */
+.lr-pill::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+    background-size: 30px 30px;
+    animation: particleMove 15s linear infinite;
+    pointer-events: none;
+}
+
+/* Línea de brillo superior animada */
+.lr-pill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 70%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
+    background-size: 200% 100%;
+    animation: shimmerLine 3s ease-in-out infinite;
+    border-radius: 0 0 10px 10px;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
+}
+
+.lr-pill:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 30px 60px rgba(14, 165, 233, .4);
+}
+
+.lr-pill i {
+    font-size: 26px;
+    background: rgba(255, 255, 255, .18);
+    border-radius: 999px;
+    padding: 10px;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+    z-index: 1;
+}
+
+.lr-pill:hover i {
+    transform: rotate(360deg) scale(1.2);
+    background: rgba(255, 255, 255, .3);
+}

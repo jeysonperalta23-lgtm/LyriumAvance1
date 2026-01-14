@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Configuración de Tienda - Panel Admin</title>
+  
+  <!-- TailwindCSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Iconos Phosphor -->
+  <script src="https://unpkg.com/phosphor-icons"></script>
+  
+  <style>
+    /* Estilos para las cards de selección */
+    .layout-option, .theme-option {
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .layout-option:hover, .theme-option:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+    }
+    
+    .layout-option.selected, .theme-option.selected {
+      border: 3px solid #0ea5e9;
+      background: #f0f9ff;
+    }
+    
+    .layout-option.disabled, .theme-option.disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      position: relative;
+    }
+    
+    .layout-option.disabled::after, .theme-option.disabled::after {
+      content: '🔒 Premium';
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: #f59e0b;
+      color: white;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: bold;
+    }
+    
+    /* Vista previa responsive */
+    .preview-container {
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #f8fafc;
+    }
+    
+    .preview-iframe {
+      width: 100%;
+      height: 600px;
+      border: none;
+    }
+  </style>
+</head>
+<body class="bg-gray-50">
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     PANEL DE CONFIGURACIÓN DE TIENDA
+     ═══════════════════════════════════════════════════════════════════════════
+     
+     BACKEND TODO:
+     
+     1. Verificar autenticación:
+        - Usuario debe estar logueado
+        - Usuario debe ser dueño de la tienda
+     
+     2. Obtener datos actuales:
+        $tienda = Tienda::obtener_por_id($_SESSION['id_tienda']);
+        $plan_actual = $tienda['plan'];
+        $layout_actual = $tienda['layout_modelo'];
+        $tema_actual = $tienda['tema'];
+     
+     3. Al guardar (AJAX):
+        - Validar que el usuario tenga plan Premium si elige layout != 1 o tema != ''
+        - Actualizar BD: UPDATE tiendas SET LayoutModelo = ?, Tema = ? WHERE IdTienda = ?
+        - Retornar JSON: { success: true, mensaje: "Configuración actualizada" }
+     
+     ═══════════════════════════════════════════════════════════════════════════ -->
+
+<div class="max-w-7xl mx-auto p-6">
+  
+  <!-- Header -->
+  <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+    <div class="flex items-center justify-between">
+      <div>
+        <h1 class="text-2xl font-bold text-gray-800">Configuración de Tienda</h1>
+        <p class="text-gray-500 mt-1">Personaliza la apariencia de tu tienda</p>
+      </div>
+      <div class="flex items-center gap-3">
+        <!-- 🔗 Backend: Mostrar plan actual desde BD -->
+        <span class="px-4 py-2 bg-purple-100 text-purple-700 rounded-full text-sm font-bold">
+          <i class="ph-crown-simple-fill"></i> Plan Premium
+        </span>
+        <a href="tienda.php?slug=vida-natural" target="_blank" class="px-4 py-2 bg-sky-500 text-white rounded-lg hover:bg-sky-600 transition-colors">
+          <i class="ph-eye"></i> Ver Tienda
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    
+    <!-- ═══════════════════════════════════════════════════════════════════
+         COLUMNA IZQUIERDA: OPCIONES DE CONFIGURACIÓN
+         ═══════════════════════════════════════════════════════════════════ -->
+    <div class="lg:col-span-2 space-y-6">
+      
+      <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+           SECCIÓN 1: MODELO DE LAYOUT
+           ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+      <div class="bg-white rounded-xl shadow-sm p-6">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h2 class="text-lg font-bold text-gray-800">Modelo de Layout</h2>
+            <p class="text-sm text-gray-500">Elige la estructura visual de tu tienda</p>
+          </div>
+          <i class="ph-layout text-3xl text-sky-500"></i>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          
+          <!-- Layout 1: Sidebar Derecha -->
+          <div class="layout-option selected border-2 rounded-lg p-4 text-center" data-layout="1">
+            <div class="mb-3">
+              <svg class="w-full h-24 mx-auto" viewBox="0 0 100 60" fill="none">
+                <rect x="5" y="5" width="60" height="50" fill="#e2e8f0" rx="2"/>
+                <rect x="70" y="5" width="25" height="50" fill="#cbd5e1" rx="2"/>
+              </svg>
+            </div>
+            <h3 class="font-bold text-gray-800 mb-1">Sidebar Derecha</h3>
+            <p class="text-xs text-gray-500">Layout por defecto</p>
+            <div class="mt-2">
+              <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">Seleccionado</span>
+            </div>
+          </div>
+          
+          <!-- Layout 2: Sidebar Izquierda (Premium) -->
+          <!-- 🔗 Backend: Agregar clase 'disabled' si plan != 'premium' -->
+          <div class="layout-option border-2 rounded-lg p-4 text-center" data-layout="2">
+            <div class="mb-3">
+              <svg class="w-full h-24 mx-auto" viewBox="0 0 100 60" fill="none">
+                <rect x="5" y="5" width="25" height="50" fill="#cbd5e1" rx="2"/>
+                <rect x="35" y="5" width="60" height="50" fill="#e2e8f0" rx="2"/>
+              </svg>
+            </div>
+            <h3 class="font-bold text-gray-800 mb-1">Sidebar Izquierda</h3>
+            <p class="text-xs text-gray-500">Invierte el orden</p>
+          </div>
+          
+          <!-- Layout 3: Full Width (Premium) -->
+          <!-- 🔗 Backend: Agregar clase 'disabled' si plan != 'premium' -->
+          <div class="layout-option border-2 rounded-lg p-4 text-center" data-layout="3">
+            <div class="mb-3">
+              <svg class="w-full h-24 mx-auto" viewBox="0 0 100 60" fill="none">
+                <rect x="5" y="5" width="90" height="50" fill="#e2e8f0" rx="2"/>
+              </svg>
+            </div>
+            <h3 class="font-bold text-gray-800 mb-1">Ancho Completo</h3>
+            <p class="text-xs text-gray-500">Sin sidebar lateral</p>
+          </div>
+          
+        </div>
+      </div>
+      
+      <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+           SECCIÓN 2: TEMA DE COLOR
+           ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+      <div class="bg-white rounded-xl shadow-sm p-6">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h2 class="text-lg font-bold text-gray-800">Tema de Color</h2>
+            <p class="text-sm text-gray-500">Personaliza la paleta de colores</p>
+          </div>
+          <i class="ph-palette text-3xl text-sky-500"></i>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          
+          <!-- Tema Default -->
+          <div class="theme-option selected border-2 rounded-lg p-4" data-theme="">
+            <div class="flex items-center gap-3 mb-3">
+              <div class="flex gap-1">
+                <div class="w-8 h-8 rounded-full bg-sky-500"></div>
+                <div class="w-8 h-8 rounded-full bg-sky-300"></div>
+                <div class="w-8 h-8 rounded-full bg-sky-700"></div>
+              </div>
+              <div class="flex-1">
+                <h3 class="font-bold text-gray-800">Default</h3>
+                <p class="text-xs text-gray-500">Azul cielo</p>
+              </div>
+            </div>
+            <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">Seleccionado</span>
+          </div>
+          
+          <!-- Tema Ocean (Premium) -->
+          <!-- 🔗 Backend: Agregar clase 'disabled' si plan != 'premium' -->
+          <div class="theme-option border-2 rounded-lg p-4" data-theme="tema-ocean">
+            <div class="flex items-center gap-3 mb-3">
+              <div class="flex gap-1">
+                <div class="w-8 h-8 rounded-full bg-cyan-600"></div>
+                <div class="w-8 h-8 rounded-full bg-cyan-400"></div>
+                <div class="w-8 h-8 rounded-full bg-cyan-800"></div>
+              </div>
+              <div class="flex-1">
+                <h3 class="font-bold text-gray-800">Ocean</h3>
+                <p class="text-xs text-gray-500">Azul profundo</p>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Tema Dark (Premium) -->
+          <!-- 🔗 Backend: Agregar clase 'disabled' si plan != 'premium' -->
+          <div class="theme-option border-2 rounded-lg p-4" data-theme="tema-dark">
+            <div class="flex items-center gap-3 mb-3">
+              <div class="flex gap-1">
+                <div class="w-8 h-8 rounded-full bg-slate-900"></div>
+                <div class="w-8 h-8 rounded-full bg-amber-500"></div>
+                <div class="w-8 h-8 rounded-full bg-slate-700"></div>
+              </div>
+              <div class="flex-1">
+                <h3 class="font-bold text-gray-800">Dark</h3>
+                <p class="text-xs text-gray-500">Modo oscuro</p>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Tema Minimal (Premium) -->
+          <!-- 🔗 Backend: Agregar clase 'disabled' si plan != 'premium' -->
+          <div class="theme-option border-2 rounded-lg p-4" data-theme="tema-minimal">
+            <div class="flex items-center gap-3 mb-3">
+              <div class="flex gap-1">
+                <div class="w-8 h-8 rounded-full bg-black"></div>
+                <div class="w-8 h-8 rounded-full bg-gray-400"></div>
+                <div class="w-8 h-8 rounded-full bg-white border"></div>
+              </div>
+              <div class="flex-1">
+                <h3 class="font-bold text-gray-800">Minimal</h3>
+                <p class="text-xs text-gray-500">Blanco y negro</p>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+      
+      <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+           BOTONES DE ACCIÓN
+           ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+      <div class="flex gap-3">
+        <button id="btnGuardar" class="flex-1 px-6 py-3 bg-sky-500 text-white rounded-lg font-bold hover:bg-sky-600 transition-colors">
+          <i class="ph-floppy-disk"></i> Guardar Cambios
+        </button>
+        <button id="btnRestaurar" class="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg font-bold hover:bg-gray-300 transition-colors">
+          <i class="ph-arrow-counter-clockwise"></i> Restaurar
+        </button>
+      </div>
+      
+    </div>
+    
+    <!-- ═══════════════════════════════════════════════════════════════════
+         COLUMNA DERECHA: VISTA PREVIA
+         ═══════════════════════════════════════════════════════════════════ -->
+    <div class="lg:col-span-1">
+      <div class="bg-white rounded-xl shadow-sm p-6 sticky top-6">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-lg font-bold text-gray-800">Vista Previa</h2>
+          <i class="ph-monitor text-2xl text-sky-500"></i>
+        </div>
+        
+        <div class="preview-container">
+          <!-- 🔗 Backend: Cargar tienda.php con parámetros de preview -->
+          <iframe 
+            id="previewIframe" 
+            src="tienda.php?slug=vida-natural&preview=1" 
+            class="preview-iframe"
+          ></iframe>
+        </div>
+        
+        <div class="mt-4 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+          <p class="text-xs text-amber-700">
+            <i class="ph-info"></i> 
+            Los cambios se aplicarán en tiempo real al guardar
+          </p>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+  
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     JAVASCRIPT - LÓGICA DE CONFIGURACIÓN
+     ═══════════════════════════════════════════════════════════════════════════ -->
+<script>
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// CONFIGURACIÓN INICIAL
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 🔗 Backend: Cargar desde BD
+const CONFIG_INICIAL = {
+  layout: 1,              // LayoutModelo desde BD
+  tema: '',               // Tema desde BD
+  plan: 'premium',        // Plan desde BD
+  slug: 'vida-natural'    // Slug de la tienda
+};
+
+let configActual = { ...CONFIG_INICIAL };
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// SELECCIÓN DE LAYOUT
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+document.querySelectorAll('.layout-option').forEach(option => {
+  option.addEventListener('click', function() {
+    // Verificar si está deshabilitado (plan básico)
+    if (this.classList.contains('disabled')) {
+      alert('Esta opción requiere Plan Premium. ¡Actualiza tu plan para desbloquearla!');
+      return;
+    }
+    
+    // Quitar selección anterior
+    document.querySelectorAll('.layout-option').forEach(opt => {
+      opt.classList.remove('selected');
+      opt.querySelector('span')?.remove();
+    });
+    
+    // Marcar como seleccionado
+    this.classList.add('selected');
+    const badge = document.createElement('span');
+    badge.className = 'px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full mt-2 inline-block';
+    badge.textContent = 'Seleccionado';
+    this.appendChild(badge);
+    
+    // Actualizar configuración
+    configActual.layout = parseInt(this.dataset.layout);
+    
+    // Actualizar vista previa
+    actualizarVistaPrevia();
+  });
+});
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// SELECCIÓN DE TEMA
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+document.querySelectorAll('.theme-option').forEach(option => {
+  option.addEventListener('click', function() {
+    // Verificar si está deshabilitado (plan básico)
+    if (this.classList.contains('disabled')) {
+      alert('Esta opción requiere Plan Premium. ¡Actualiza tu plan para desbloquearla!');
+      return;
+    }
+    
+    // Quitar selección anterior
+    document.querySelectorAll('.theme-option').forEach(opt => {
+      opt.classList.remove('selected');
+      opt.querySelector('span')?.remove();
+    });
+    
+    // Marcar como seleccionado
+    this.classList.add('selected');
+    const badge = document.createElement('span');
+    badge.className = 'px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full';
+    badge.textContent = 'Seleccionado';
+    this.appendChild(badge);
+    
+    // Actualizar configuración
+    configActual.tema = this.dataset.theme;
+    
+    // Actualizar vista previa
+    actualizarVistaPrevia();
+  });
+});
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// ACTUALIZAR VISTA PREVIA
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function actualizarVistaPrevia() {
+  const iframe = document.getElementById('previewIframe');
+  const url = `tienda.php?slug=${configActual.slug}&preview=1&layout=${configActual.layout}&tema=${configActual.tema}`;
+  iframe.src = url;
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// GUARDAR CAMBIOS
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 🔗 Backend: Enviar AJAX a api/tienda.php?op=actualizar_configuracion
+document.getElementById('btnGuardar').addEventListener('click', async function() {
+  const btn = this;
+  const originalText = btn.innerHTML;
+  
+  // Mostrar loading
+  btn.innerHTML = '<i class="ph-circle-notch animate-spin"></i> Guardando...';
+  btn.disabled = true;
+  
+  try {
+    // 🔗 Backend: Hacer petición AJAX
+    const response = await fetch('api/tienda.php?op=actualizar_configuracion', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        layout_modelo: configActual.layout,
+        tema: configActual.tema
+      })
+    });
+    
+    const data = await response.json();
+    
+    if (data.success) {
+      // Éxito
+      btn.innerHTML = '<i class="ph-check-circle"></i> ¡Guardado!';
+      btn.classList.remove('bg-sky-500', 'hover:bg-sky-600');
+      btn.classList.add('bg-green-500');
+      
+      setTimeout(() => {
+        btn.innerHTML = originalText;
+        btn.classList.remove('bg-green-500');
+        btn.classList.add('bg-sky-500', 'hover:bg-sky-600');
+        btn.disabled = false;
+      }, 2000);
+      
+      // Actualizar configuración inicial
+      CONFIG_INICIAL.layout = configActual.layout;
+      CONFIG_INICIAL.tema = configActual.tema;
+    } else {
+      throw new Error(data.mensaje || 'Error al guardar');
+    }
+    
+  } catch (error) {
+    // Error
+    btn.innerHTML = '<i class="ph-x-circle"></i> Error al guardar';
+    btn.classList.remove('bg-sky-500');
+    btn.classList.add('bg-red-500');
+    
+    alert('Error: ' + error.message);
+    
+    setTimeout(() => {
+      btn.innerHTML = originalText;
+      btn.classList.remove('bg-red-500');
+      btn.classList.add('bg-sky-500', 'hover:bg-sky-600');
+      btn.disabled = false;
+    }, 2000);
+  }
+});
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// RESTAURAR CONFIGURACIÓN
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+document.getElementById('btnRestaurar').addEventListener('click', function() {
+  if (!confirm('¿Deseas restaurar la configuración guardada?')) return;
+  
+  // Restaurar valores iniciales
+  configActual = { ...CONFIG_INICIAL };
+  
+  // Actualizar UI
+  document.querySelectorAll('.layout-option').forEach(opt => {
+    opt.classList.remove('selected');
+    opt.querySelector('span')?.remove();
+    if (parseInt(opt.dataset.layout) === configActual.layout) {
+      opt.classList.add('selected');
+      const badge = document.createElement('span');
+      badge.className = 'px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full mt-2 inline-block';
+      badge.textContent = 'Seleccionado';
+      opt.appendChild(badge);
+    }
+  });
+  
+  document.querySelectorAll('.theme-option').forEach(opt => {
+    opt.classList.remove('selected');
+    opt.querySelector('span')?.remove();
+    if (opt.dataset.theme === configActual.tema) {
+      opt.classList.add('selected');
+      const badge = document.createElement('span');
+      badge.className = 'px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full';
+      badge.textContent = 'Seleccionado';
+      opt.appendChild(badge);
+    }
+  });
+  
+  // Actualizar vista previa
+  actualizarVistaPrevia();
+});
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// DESHABILITAR OPCIONES PREMIUM SI ES PLAN BÁSICO
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 🔗 Backend: Ejecutar esto si $plan === 'basico'
+if (CONFIG_INICIAL.plan === 'basico') {
+  // Deshabilitar layouts 2 y 3
+  document.querySelectorAll('.layout-option[data-layout="2"], .layout-option[data-layout="3"]').forEach(opt => {
+    opt.classList.add('disabled');
+  });
+  
+  // Deshabilitar todos los temas excepto default
+  document.querySelectorAll('.theme-option:not([data-theme=""])').forEach(opt => {
+    opt.classList.add('disabled');
+  });
+}
+</script>
+
+</body>
+</html>

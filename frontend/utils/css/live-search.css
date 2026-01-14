@@ -1,0 +1,153 @@
+/* frontend/utils/css/live-search.css */
+
+#liveSearchDropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    border-radius: 1.5rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    margin-top: 10px;
+    overflow: hidden;
+    animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#liveSearchDropdown.active {
+    display: block !important;
+}
+
+.live-search-container {
+    display: grid;
+    grid-template-columns: 35% 65%;
+    min-height: 300px;
+}
+
+.live-search-left {
+    padding: 2rem;
+    background: rgba(243, 244, 246, 0.5);
+    border-right: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.live-search-right {
+    padding: 2rem;
+}
+
+.live-search-title {
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: #9ca3af;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 1.5rem;
+}
+
+.category-suggestion {
+    display: block;
+    padding: 0.75rem 0;
+    font-size: 0.9rem;
+    color: #374151;
+    transition: all 0.2s;
+    text-decoration: none;
+}
+
+.category-suggestion:hover,
+.category-suggestion.active {
+    color: #0ea5e9;
+    padding-left: 10px;
+    background: rgba(14, 165, 233, 0.05);
+    border-radius: 8px;
+}
+
+.category-suggestion.active {
+    font-weight: 700;
+}
+
+.category-suggestion strong {
+    color: #000;
+}
+
+.products-scroll-area {
+    max-height: 400px;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+.products-scroll-area::-webkit-scrollbar {
+    width: 4px;
+}
+
+.products-scroll-area::-webkit-scrollbar-thumb {
+    background: #e5e7eb;
+    border-radius: 4px;
+}
+
+.product-suggestion-item {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1rem;
+    border-radius: 1rem;
+    transition: background 0.2s;
+    text-decoration: none;
+}
+
+.product-suggestion-item:hover {
+    background: rgba(14, 165, 233, 0.05);
+}
+
+.product-suggestion-img {
+    width: 64px;
+    height: 64px;
+    border-radius: 0.75rem;
+    object-fit: cover;
+    background: #f3f4f6;
+}
+
+.product-suggestion-info {
+    flex: 1;
+}
+
+.product-suggestion-name {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 0.1rem;
+}
+
+.product-suggestion-category {
+    font-size: 10px;
+    font-weight: 700;
+    color: #0ea5e9;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.25rem;
+}
+
+.product-suggestion-price {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #0ea5e9;
+}
+
+.no-results {
+    padding: 3rem;
+    text-align: center;
+    color: #6b7280;
+}

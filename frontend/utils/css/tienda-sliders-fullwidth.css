@@ -1,0 +1,101 @@
+/* ========================================
+   SLIDERS HORIZONTALES - ESTILO FINAL
+   ======================================== */
+
+/* Reset de bloques para que tengan el mismo margen que todo lo demás */
+.tienda-bloque[data-nombre="Publicidad Horizontal"],
+.tienda-bloque[data-nombre="Ofertas Especiales"],
+.tienda-bloque[data-tipo="anuncios"] {
+    position: relative !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 2rem 0 !important;
+    padding: 0 !important;
+    background: transparent !important;
+}
+
+/* El slider ocupando el mismo ancho que las secciones de abajo */
+.slider-publicidad-horizontal,
+.slider-descuentos-horizontal {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 250px !important;
+    /* Altura reducida como solicitaste */
+    position: relative !important;
+    border-radius: 20px !important;
+    /* Bordes redondeados */
+    overflow: hidden !important;
+    background: #fff !important;
+    /* Fondo blanco para quitar cualquier rastro de amarillo */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+.slider-publicidad-container,
+.slider-descuentos-container {
+    width: 100% !important;
+    height: 100% !important;
+    position: relative;
+}
+
+.slider-publicidad-track,
+.slider-descuentos-track {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* Imágenes para que llenen todo el espacio sin fondo amarillo */
+.slider-publicidad-slide img,
+.slider-descuentos-slide img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    display: block !important;
+    border-radius: 20px !important;
+}
+
+/* Dots indicadores */
+.slider-publicidad-dots,
+.slider-descuentos-dots {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    z-index: 10;
+}
+
+.slider-publicidad-dot,
+.slider-descuentos-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.4);
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.slider-publicidad-dot.active,
+.slider-descuentos-dot.active {
+    width: 30px;
+    border-radius: 10px;
+    background: #fff;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+
+    .slider-publicidad-horizontal,
+    .slider-descuentos-horizontal {
+        height: 200px !important;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .slider-publicidad-horizontal,
+    .slider-descuentos-horizontal {
+        height: 180px !important;
+    }
+}

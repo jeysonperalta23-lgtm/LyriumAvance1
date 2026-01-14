@@ -1,0 +1,158 @@
+/* ========================================
+   FUNCIONALIDADES DEL GRID DE PRODUCTOS
+   Dropdown de ordenar y vista lista
+   ======================================== */
+
+/* Dropdown de filtros/ordenar */
+.tienda-filtro-dropdown {
+    position: relative;
+}
+
+.tienda-filtro-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #1e293b;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.tienda-filtro-btn:hover {
+    border-color: #cbd5e1;
+    background: #f8fafc;
+}
+
+.tienda-filtro-btn i {
+    font-size: 14px;
+    color: #64748b;
+    transition: transform 0.2s ease;
+}
+
+.tienda-filtro-menu {
+    position: absolute;
+    top: calc(100% + 4px);
+    right: 0;
+    min-width: 220px;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
+    z-index: 50;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    transition: all 0.2s ease;
+}
+
+.tienda-filtro-menu.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.tienda-ordenar-option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0.625rem 1rem;
+    font-size: 0.875rem;
+    color: #374151;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.15s ease;
+}
+
+.tienda-ordenar-option:first-child {
+    border-radius: 8px 8px 0 0;
+}
+
+.tienda-ordenar-option:last-child {
+    border-radius: 0 0 8px 8px;
+}
+
+.tienda-ordenar-option:hover {
+    background: #f8fafc;
+}
+
+.tienda-ordenar-option.active {
+    font-weight: 500;
+    color: #0ea5e9;
+}
+
+.tienda-ordenar-option i {
+    font-size: 16px;
+    color: #0ea5e9;
+}
+
+/* Animación de transición del grid */
+.tienda-productos-grid {
+    transition: opacity 0.15s ease;
+}
+
+/* Vista lista - Solo para el grid principal */
+#productosGrid.vista-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+#productosGrid.vista-lista .producto-grid-card {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    max-width: 100%;
+}
+
+#productosGrid.vista-lista .producto-grid-imagen {
+    width: 200px;
+    min-width: 200px;
+    height: 200px;
+}
+
+#productosGrid.vista-lista .producto-grid-info {
+    flex: 1;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+#productosGrid.vista-lista .producto-grid-nombre {
+    font-size: 1.125rem;
+    margin-bottom: 0.5rem;
+}
+
+#productosGrid.vista-lista .producto-grid-precios {
+    font-size: 1.25rem;
+    margin-bottom: 0.75rem;
+}
+
+#productosGrid.vista-lista .producto-grid-hover-btns {
+    display: flex !important;
+    margin-top: auto;
+}
+
+/* Responsive para vista lista */
+@media (max-width: 640px) {
+    #productosGrid.vista-lista .producto-grid-card {
+        flex-direction: column;
+    }
+
+    #productosGrid.vista-lista .producto-grid-imagen {
+        width: 100%;
+        height: 250px;
+    }
+
+    #productosGrid.vista-lista .producto-grid-info {
+        padding: 0.75rem;
+    }
+}

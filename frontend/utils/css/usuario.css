@@ -1,0 +1,146 @@
+ :root {
+     --dominant-blue: #03A9F4;
+     --dominant-blue-light: #4FC3F7;
+     --dominant-blue-dark: #0288D1;
+ }
+
+ /* ======================= THEME LYRIUM PARA AG-GRID (por si se reutiliza) ======================= */
+ .ag-theme-lyrium {
+     font-size: 13px;
+     --lyrium-lime: var(--dominant-blue);
+     --lyrium-green: var(--dominant-blue-dark);
+     --lyrium-cyan: var(--dominant-blue-light);
+     --lyrium-bg-row: #f5fbff;
+ }
+
+ .ag-theme-lyrium .ag-header {
+     background: linear-gradient(90deg,
+             var(--dominant-blue),
+             var(--dominant-blue-dark),
+             var(--dominant-blue-light));
+     color: #ffffff;
+     border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+ }
+
+ .ag-theme-lyrium .ag-header-viewport,
+ .ag-theme-lyrium .ag-header-container {
+     border-radius: 20px 20px 0 0;
+     overflow: hidden;
+ }
+
+ .ag-theme-lyrium .ag-header-row {
+     border-bottom: 0;
+ }
+
+ .ag-theme-lyrium .ag-header-cell,
+ .ag-theme-lyrium .ag-header-group-cell {
+     border-right: 1px solid rgba(255, 255, 255, 0.2);
+     background: transparent;
+ }
+
+ .ag-theme-lyrium .ag-header-cell-label {
+     display: flex;
+     align-items: center;
+     gap: 6px;
+     text-transform: uppercase;
+     letter-spacing: 0.06em;
+     font-size: 11px;
+     font-weight: 600;
+ }
+
+ .ag-theme-lyrium .ag-header-cell-text {
+     color: #ffffff;
+ }
+
+ .ag-theme-lyrium .ag-icon {
+     filter: brightness(1.9);
+ }
+
+ .ag-theme-lyrium .ag-center-cols-container,
+ .ag-theme-lyrium .ag-row {
+     background-color: #ffffff;
+     color: #022c22;
+ }
+
+ .ag-theme-lyrium .ag-row-odd {
+     background: linear-gradient(90deg, #f5fbff 0%, #e8f6ff 100%);
+ }
+
+ .ag-theme-lyrium .ag-row-hover {
+     background: radial-gradient(circle at left,
+             rgba(3, 169, 244, 0.18),
+             transparent 60%);
+ }
+
+ .ag-theme-lyrium .ag-row-selected {
+     background: linear-gradient(90deg,
+             rgba(2, 136, 209, 0.16),
+             rgba(3, 169, 244, 0.16)) !important;
+     box-shadow: inset 0 0 0 1px rgba(2, 136, 209, 0.45);
+ }
+
+ .ag-theme-lyrium .ag-cell,
+ .ag-theme-lyrium .ag-row {
+     border-color: rgba(148, 163, 184, 0.35);
+ }
+
+ .ag-theme-lyrium .ag-cell {
+     padding-top: 6px;
+     padding-bottom: 6px;
+ }
+
+ .ag-theme-lyrium .ag-pinned-left-header,
+ .ag-theme-lyrium .ag-pinned-right-header {
+     background: linear-gradient(90deg,
+             var(--dominant-blue),
+             var(--dominant-blue-dark),
+             var(--dominant-blue-light));
+ }
+
+ .ag-theme-lyrium .ag-body-horizontal-scroll-viewport::-webkit-scrollbar,
+ .ag-theme-lyrium .ag-body-vertical-scroll-viewport::-webkit-scrollbar {
+     height: 7px;
+     width: 7px;
+ }
+
+ .ag-theme-lyrium .ag-body-horizontal-scroll-viewport::-webkit-scrollbar-track,
+ .ag-theme-lyrium .ag-body-vertical-scroll-viewport::-webkit-scrollbar-track {
+     background: #e0f4ff;
+ }
+
+ .ag-theme-lyrium .ag-body-horizontal-scroll-viewport::-webkit-scrollbar-thumb,
+ .ag-theme-lyrium .ag-body-vertical-scroll-viewport::-webkit-scrollbar-thumb {
+     background: linear-gradient(180deg,
+             var(--dominant-blue),
+             var(--dominant-blue-dark));
+     border-radius: 999px;
+ }
+
+ .ag-theme-lyrium .ag-paging-panel {
+     border-top: 1px solid rgba(148, 163, 184, 0.35);
+     background: linear-gradient(90deg, #f2f9ff, #e6f4ff);
+     font-size: 12px;
+     color: #0c4a6e;
+ }
+
+ .ag-theme-lyrium .ag-paging-button {
+     border-radius: 999px;
+     border-color: rgba(148, 163, 184, 0.6);
+ }
+
+ .ag-theme-lyrium .ag-paging-button:hover {
+     background: rgba(3, 169, 244, 0.12);
+     border-color: var(--dominant-blue);
+ }
+
+ /* ======================= ESTILOS TARJETAS USUARIOS ======================= */
+ .user-card-hover {
+     transition: transform 0.18s ease, box-shadow 0.18s ease,
+         background-color 0.18s ease, border-color 0.18s ease;
+ }
+
+ .user-card-hover:hover {
+     transform: translateY(-3px);
+     box-shadow: 0 10px 25px rgba(15, 118, 178, 0.20);
+ }

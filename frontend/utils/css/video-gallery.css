@@ -1,0 +1,55 @@
+/* Force 3-column layout for Premium Image Gallery (3x3 Grid) */
+#premium-img-gallery-b959645 .premium-gallery-container {
+    height: auto !important;
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 30px !important;
+    width: 100% !important;
+}
+
+#premium-img-gallery-b959645 .premium-gallery-item {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    width: 100% !important;
+    margin: 0 !important;
+    display: block;
+    opacity: 1 !important;
+    transform: none !important;
+    box-sizing: border-box;
+}
+
+/* Ensure the image container takes full width */
+#premium-img-gallery-b959645 .pa-gallery-img-container {
+    width: 100%;
+}
+
+#premium-img-gallery-b959645 img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Tablet: 2 columns if screen is too narrow */
+@media (max-width: 991px) {
+    #premium-img-gallery-b959645 .premium-gallery-container {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+}
+
+/* Mobile: 1 column */
+@media (max-width: 640px) {
+    #premium-img-gallery-b959645 .premium-gallery-container {
+        grid-template-columns: repeat(1, 1fr) !important;
+    }
+}
+
+/* Load More Functionality Styles */
+#premium-img-gallery-b959645 .hidden-video-item {
+    display: none !important;
+}
+
+.premium-gallery-load-more-btn {
+    display: inline-block !important;
+    transition: all 0.4s ease !important;
+}

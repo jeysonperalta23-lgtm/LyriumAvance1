@@ -1,0 +1,14 @@
+        :root {
+            --dominant-blue: #03A9F4;
+            --dominant-blue-light: #4FC3F7;
+            --dominant-blue-dark: #0288D1;
+        }
+
+        .product-card-hover {
+            transition: transform 0.18s ease, box-shadow 0.18s ease;
+        }
+
+        .product-card-hover:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(15, 118, 178, 0.20);
+        }

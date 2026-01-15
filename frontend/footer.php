@@ -10,7 +10,7 @@
       <!-- Redes Sociales Lyrium -->
       <div class="flex items-center gap-4 mt-2">
 
-        <a href="https://www.instagram.com/lyrium_biomarketplace/" target="_blank" class="social-icon-btn instagram"
+        <a href="https://www.instagram.com/" target="_blank" class="social-icon-btn instagram"
           title="Síguenos en Instagram">
           <i class="ph-instagram-logo"></i>
         </a>
@@ -122,9 +122,13 @@
   </div>
 </div>
 
+<!-- Include Contact Modal -->
+<?php include 'contactanos.php'; ?>
+
 <!-- JS -->
 <script src="js/buscar.js?v=<?php echo time(); ?>"></script>
 <script src="js/index.js?v=<?php echo time(); ?>"></script>
+<script src="utils/js/contact-modal.js?v=<?php echo time(); ?>"></script>
 </body>
 
 </html>

@@ -238,16 +238,18 @@
 
 .ofertas-bg {
   position: absolute;
-  top: -20%;
+  top: 10%;
   left: 0;
   width: 100%;
-  height: 140%;
+  height:  100%;
   z-index: 0;
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center top;
-  will-change: transform;
-  transform: translate3d(0, 0, 0);
+  background-size: cover !important;
+  background-repeat: no-repeat !important;
+  background-position: center top !important; 
+  will-change: transform, opacity;
+  transform: translate3d(0, 0, 0) scale(1.3); 
+  transition: opacity 1.2s ease-in-out;
+  
 }
 
 .ofertas-bg-productos {

@@ -9,7 +9,7 @@ session_destroy();
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Términos y Condiciones - Lyrium Biomarketplace</title>
-  <link rel="stylesheet" href="utils/css/politicasdeprivacidad.css">
+  <link rel="stylesheet" href="utils/css/terminoscondiciones.css">
   <link rel="stylesheet" href="utils/css/ly-pagehead.css">
   <link rel="stylesheet" href="utils/css/mobile-popup.css">
   <link rel="stylesheet" href="utils/css/share-modal.css">
@@ -206,6 +206,14 @@ session_destroy();
 
   </main>
 
+  <!-- FLOATING DARK MODE TOGGLE -->
+  <button id="darkModeToggle" class="dark-mode-toggle" aria-label="Alternar modo oscuro" title="Cambiar tema">
+    <div class="icon-wrapper">
+      <i class="ph-fill ph-moon moon-icon"></i>
+      <i class="ph-fill ph-sun sun-icon"></i>
+    </div>
+  </button>
+
   <!-- MENÚ MÓVIL POP-UP (Movido al final) -->
   <button id="btnMobilePopup" class="mobile-popup-btn top-right lg:hidden" aria-label="Abrir índice">
     <i class="ph-list-bullets"></i> <span>Índice</span>
@@ -237,6 +245,7 @@ session_destroy();
   <script src="utils/js/terminoscondiciones.js?v=1.1"></script>
   <script src="utils/js/mobile-popup.js?v=1.1"></script>
   <script src="utils/js/share-modal.js?v=1.1"></script>
+  <script src="utils/js/dark-mode-toggle.js?v=1.0"></script>
 
   <!-- MODAL DE COMPARTIR -->
   <div id="modalShareTerms" class="share-modal-overlay">

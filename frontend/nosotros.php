@@ -1,25 +1,6 @@
-<?php
-session_start();
-session_destroy();
-?>
-<!DOCTYPE html>
-<html lang="es">
-
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lyrium Biomarketplace</title>
-
-  <!-- Tailwind (porque usas clases tailwind en el HTML) -->
-  <script src="https://cdn.tailwindcss.com"></script>
-
-
-</head>
-
 <?php include 'header.php'; ?>
 <link rel="stylesheet" href="utils/css/nosotros.css?v=<?php echo time(); ?>" />
 
-<body>
   <main class="max-w-[80rem] mx-auto px-4 py-10 flex-1 space-y-16">
 
     <!-- HERO 1 (FULL WIDTH) -->

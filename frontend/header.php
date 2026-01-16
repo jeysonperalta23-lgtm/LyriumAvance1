@@ -21,12 +21,14 @@
   <link href="utils/css/filters.css?v=<?php echo time(); ?>" rel="stylesheet" />
   <link href="utils/css/live-search.css?v=<?php echo time(); ?>" rel="stylesheet" />
   <link href="utils/css/ui-components.css?v=<?php echo time(); ?>" rel="stylesheet" />
+  <link href="utils/css/index-dark-mode.css?v=<?php echo time(); ?>" rel="stylesheet" />
   <link rel="icon" type="image/png" href="img/logo.png?v=<?php echo time(); ?>" />
 
   <!-- Scripts de Filtrado y Teclado -->
   <script src="utils/js/filters.js?v=<?php echo time(); ?>" defer></script>
   <script src="utils/js/keyboard.js?v=<?php echo time(); ?>" defer></script>
   <script src="js/live-search.js?v=<?php echo time(); ?>" defer></script>
+   <script src="js/index.js?v=<?php echo time(); ?>" defer></script>
   
   <link rel='stylesheet' id='dashicons-css'
     href='bioblog/lyriumbiomarketplace.com/wp-includes/css/dashicons.mind4d0.css?ver=6.9' media='all' />
@@ -218,7 +220,7 @@
           <i class="ph-caret-right text-gray-400 text-sm"></i>
         </a>
 
-        <a href="#" class="openContactModal flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition group">
+        <a href="contactanos.php" class="flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition group">
           <div class="flex items-center gap-3">
             <div class="w-6 h-6 flex items-center justify-center">
               <i class="ph-phone-call text-xl text-green-600 group-hover:scale-110 transition-transform"></i>
@@ -338,7 +340,7 @@
           <span class="whitespace-nowrap">TIENDAS REGISTRADAS</span>
         </a>
 
-        <a href="#" id="openContactModal" class="flex items-center gap-1 hover:text-sky-500 transition whitespace-nowrap">
+        <a href="contactanos.php" class="flex items-center gap-1 hover:text-sky-500 transition whitespace-nowrap">
           <i class="ph-phone-call text-[17px]"></i> CONTÁCTANOS
         </a>
 

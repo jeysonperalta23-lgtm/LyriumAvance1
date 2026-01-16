@@ -302,6 +302,7 @@ session_destroy();
   <?php include 'footer.php'; ?>
 
  
+  <script src="utils/js/politicasdeprivacidad.js?v=1.0"></script>
   <script src="utils/js/mobile-popup.js?v=1.1"></script>
 </body>
 </html>

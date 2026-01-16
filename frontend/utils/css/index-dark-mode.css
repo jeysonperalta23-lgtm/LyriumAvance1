@@ -1,0 +1,181 @@
+/* =================== DARK MODE STYLES FOR HEADER AND MENUS =================== */
+
+/* Header background - Blanco/gris muy claro para mejor visibilidad */
+.dark-mode header {
+    background: #f8fafc !important;
+    border-bottom: 1px solid #e2e8f0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Top banner */
+.dark-mode .top-banner-lyrium {
+    background: linear-gradient(90deg, #84cc16 0%, #65a30d 25%, #059669 55%, #0284c7 100%);
+}
+
+/* Desktop navigation links - Oscuros para header claro */
+.dark-mode nav a,
+.dark-mode nav button {
+    color: #334155 !important;
+}
+
+.dark-mode nav a:hover,
+.dark-mode nav button:hover {
+    color: #3b82f6 !important;
+}
+
+/* Mega menu - Productos */
+.dark-mode #menu-productos {
+    background: #1e293b !important;
+    border-color: #475569 !important;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5) !important;
+}
+
+.dark-mode #menu-productos aside {
+    background: #334155 !important;
+    border-right-color: #475569 !important;
+}
+
+.dark-mode #menu-productos section {
+    background: #1e293b !important;
+}
+
+/* Category buttons in mega menu */
+.dark-mode #megaCats button {
+    background: #475569 !important;
+    color: #e2e8f0 !important;
+    border-color: #64748b !important;
+}
+
+.dark-mode #megaCats button:hover {
+    background: #64748b !important;
+    color: #ffffff !important;
+}
+
+.dark-mode #megaCats button.bg-lime-500,
+.dark-mode #megaCats button.bg-green-400 {
+    background: #65a30d !important;
+    color: #ffffff !important;
+}
+
+/* Mega menu icons */
+.dark-mode #megaIcons a {
+    background: #334155 !important;
+    border-color: #475569 !important;
+}
+
+.dark-mode #megaIcons a:hover {
+    background: #475569 !important;
+    border-color: #60a5fa !important;
+}
+
+.dark-mode #megaIcons a div+div {
+    color: #cbd5e1 !important;
+}
+
+/* Mega menu columns */
+.dark-mode #megaCols>div>div {
+    color: #f1f5f9 !important;
+}
+
+.dark-mode #megaCols a {
+    color: #94a3b8 !important;
+}
+
+.dark-mode #megaCols a:hover {
+    color: #60a5fa !important;
+    background: rgba(96, 165, 250, 0.1) !important;
+}
+
+/* Mega menu - Servicios */
+.dark-mode #menu-servicios {
+    background: #1e293b !important;
+    border-color: #475569 !important;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5) !important;
+}
+
+.dark-mode #menu-servicios aside {
+    background: #334155 !important;
+    border-right-color: #475569 !important;
+}
+
+.dark-mode #menu-servicios section {
+    background: #1e293b !important;
+}
+
+.dark-mode #servCats button {
+    background: #475569 !important;
+    color: #e2e8f0 !important;
+}
+
+.dark-mode #servCats button:hover {
+    background: #64748b !important;
+    color: #ffffff !important;
+}
+
+.dark-mode #servIcons a {
+    background: #334155 !important;
+    border-color: #475569 !important;
+}
+
+.dark-mode #servIcons a:hover {
+    background: #475569 !important;
+    border-color: #60a5fa !important;
+}
+
+.dark-mode #servCols>div>div {
+    color: #f1f5f9 !important;
+}
+
+.dark-mode #servCols a {
+    color: #94a3b8 !important;
+}
+
+.dark-mode #servCols a:hover {
+    color: #60a5fa !important;
+    background: rgba(96, 165, 250, 0.1) !important;
+}
+
+/* Mobile menu */
+.dark-mode #mobileMenu {
+    background: #1e293b !important;
+    border-right: 1px solid #475569;
+}
+
+.dark-mode #mobileMenu .border-b {
+    border-color: #475569 !important;
+}
+
+.dark-mode #mobileMenu a {
+    color: #cbd5e1 !important;
+}
+
+.dark-mode #mobileMenu a:hover {
+    color: #60a5fa !important;
+    background: rgba(96, 165, 250, 0.1) !important;
+}
+
+.dark-mode #mobileMenu .text-gray-800 {
+    color: #e2e8f0 !important;
+}
+
+.dark-mode #mobileMenu .text-sky-600 {
+    color: #60a5fa !important;
+}
+
+.dark-mode #mobileMenu .hover\:bg-gray-50:hover {
+    background: rgba(96, 165, 250, 0.1) !important;
+}
+
+/* Mobile menu overlay */
+.dark-mode #mobileMenuOverlay {
+    background: rgba(0, 0, 0, 0.7) !important;
+}
+
+/* Session/Cart links - Azul para header claro */
+.dark-mode .text-sky-600 {
+    color: #0284c7 !important;
+}
+
+.dark-mode .bg-sky-500 {
+    background: #3b82f6 !important;
+}

@@ -57,8 +57,8 @@
       <h3 class="font-bold mb-4 text-[15px] tracking-widest text-white/90 uppercase">INFORMACIÓN</h3>
       <ul class="space-y-3 text-sm">
         <li><a href="nosotros.php" class="hover:text-sky-200 transition-colors">Nosotros</a></li>
-        <li><a href="#" class="hover:text-sky-200 transition-colors">Tiendas registradas</a></li>
-        <li><a href="#" class="hover:text-sky-200 transition-colors">Contáctanos</a></li>
+        <li><a href="tiendasregistradas.php" class="hover:text-sky-200 transition-colors">Tiendas registradas</a></li>
+        <li><a href="contactanos.php" class="hover:text-sky-200 transition-colors">Contáctanos</a></li>
       </ul>
     </div>
 
@@ -83,7 +83,7 @@
 
 <!-- Botón WhatsApp flotante -->
 <a href="#"
-  class="fixed bottom-5 right-5 bg-green-500 hover:bg-green-600 text-white px-5 py-3 rounded-full shadow-lg flex items-center gap-2 text-base z-[100]">
+  class="fixed bottom-5 right-5 bg-green-500 hover:bg-green-600 text-white px-5 py-3 rounded-full shadow-lg hidden lg:flex items-center gap-2 text-base z-[100]">
   <i class="ph-whatsapp-logo text-2xl"></i> ¿Cómo puedo ayudarte?
 </a>
 
@@ -122,13 +122,10 @@
   </div>
 </div>
 
-<!-- Include Contact Modal -->
-<?php include 'contactanos.php'; ?>
 
 <!-- JS -->
 <script src="js/buscar.js?v=<?php echo time(); ?>"></script>
 <script src="js/index.js?v=<?php echo time(); ?>"></script>
-<script src="utils/js/contact-modal.js?v=<?php echo time(); ?>"></script>
 </body>
 
 </html>

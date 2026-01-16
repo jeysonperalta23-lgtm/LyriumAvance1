@@ -1,1099 +1,1022 @@
 <?php
-// bioforo.php
+// bioforo.php - VERSIÓN CORREGIDA Y UNIFICADA
 session_start();
-/* ⚠️ NO destruir sesión aquí */
-?>
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lyrium Biomarketplace | BioForo</title>
 
-  <style>
-    html, body{ width:100%; overflow-x:hidden; }
-    *{ box-sizing:border-box; }
+// ==========================================
+// FUNCIÓN DE VALIDACIÓN DE CONTENIDO OFENSIVO
+// ==========================================
+function validarContenidoOfensivo($texto)
+{
+    $palabrasProhibidas = [
+        'puta',
+        'puto',
+        'putx',
+        'mierda',
+        'cagada',
+        'carajo',
+        'coño',
+        'cojudo',
+        'huevón',
+        'huevon',
+        'webon',
+        'weon',
+        'cabron',
+        'cabrón',
+        'pendejo',
+        'gilipollas',
+        'idiota',
+        'imbecil',
+        'imbécil',
+        'estúpido',
+        'estupido',
+        'tarado',
+        'retrasado',
+        'subnormal',
+        'zorra',
+        'perra',
+        'marica',
+        'maricón',
+        'maricon',
+        'joto',
+        'culero',
+        'culera',
+        'verga',
+        'pinga',
+        'pija',
+        'chingar',
+        'joder',
+        'follar',
+        'coger',
+        'negro de mierda',
+        'cholo',
+        'indio',
+        'serrano',
+        'mono',
+        'simio',
+        'nazi',
+        'facho',
+        'sudaca',
+        'mojado',
+        'ilegal',
+        'hijo de puta',
+        'hijueputa',
+        'hijo de perra',
+        'concha tu madre',
+        'ctm',
+        'hdp',
+        'conchesumadre',
+        'reconcha',
+        'malparido',
+        'gonorrea',
+        'mrda',
+        'mrd',
+        'ptm',
+        'ptmr',
+        'csm',
+        'csmare',
+        'hp',
+        'cdtm',
+        'pndj',
+        'pndjo',
+        'cjd',
+        'wbn',
+        'wvn',
+        'hevon',
+        'hvn',
+        'basura humana',
+        'escoria',
+        'lacra',
+        'desgraciado miserable',
+        'te mato',
+        'muérete',
+        'suicídate',
+        'ojalá te mueras'
+    ];
 
-    :root{
-      --ink:#0f172a;
-      --muted:#6b7280;
-      --muted2:#94a3b8;
-      --line:#e5e7eb;
-      --bg:#ffffff;
-      --soft:#f8fafc;
+    $textoLimpio = mb_strtolower(trim($texto));
+    $textoLimpio = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $textoLimpio);
 
-      --blue:#2ea8ff;
-      --blue-700:#1e88e5;
-
-      --radius:16px;
-      --shadow: 0 14px 40px rgba(15,23,42,.08);
-
-      --font: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
-    }
-
-    body{
-      margin:0;
-      font-family: var(--font);
-      color:var(--ink);
-      background: var(--bg);
-    }
-    header{ position: relative; z-index: 60; }
-    main, footer{ position: relative; z-index: 1; }
-
-    /* ✅ Pagehead (igual “premium” y sin negrita fuerte) */
-    .ly-pagehead{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap: 12px;
-      padding: 12px 16px;
-      border-radius: 999px;
-      background: linear-gradient(135deg, rgba(34,174,247,.16), rgba(14,165,233,.08));
-      border: 1px solid rgba(14,165,233,.16);
-      box-shadow: 0 16px 40px rgba(2,132,199,.10);
-      backdrop-filter: blur(6px);
-    }
-    .ly-pagehead__title{
-      font-weight: 650;
-      letter-spacing: .12em;
-      color: #ffffff;
-      font-size: 13px;
-      text-transform: uppercase;
-    }
-    .ly-pagehead__icon{
-      width: 34px;
-      height: 34px;
-      border-radius: 999px;
-      overflow:hidden;
-      display:grid;
-      place-items:center;
-      background: linear-gradient(135deg, #22aef7, #0ea5e9);
-      box-shadow: 0 10px 22px rgba(14,165,233,.22);
-    }
-    .ly-pagehead__icon img{
-      width: 18px;
-      height: 18px;
-      filter: brightness(2.2);
-    }
-
-    .container{
-      max-width: 1120px;
-      margin: 0 auto;
-      padding: 0 18px;
-    }
-
-    .hero{
-      margin-top: 22px;
-      border-radius: 18px;
-      overflow:hidden;
-      box-shadow: var(--shadow);
-      position: relative;
-      min-height: 300px;
-      background: #0b1220;
-    }
-    .hero__bg{
-      position:absolute; inset:0;
-      background-size: cover;
-      background-position: center;
-      transform: scale(1.03);
-      filter: saturate(1.05) contrast(1.03);
-    }
-    .hero__overlay{
-      position:absolute; inset:0;
-      background: linear-gradient(90deg, rgba(2,6,23,.70), rgba(2,6,23,.18));
-    }
-    .hero__content{
-      position:relative;
-      padding: 44px 42px;
-      max-width: 880px;
-      color:#fff;
-    }
-    .hero__title{
-      margin:0 0 10px;
-      font-size: clamp(32px, 4vw, 54px);
-      line-height: 1.02;
-      font-weight: 650; /* ✅ menos pesado */
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      text-shadow: 0 12px 26px rgba(2,6,23,.35);
-    }
-    .hero__subtitle{
-      margin:0;
-      font-size: 14px;
-      font-weight: 550; /* ✅ menos negrita */
-      opacity:.92;
-      text-transform: uppercase;
-      letter-spacing: .12em;
-    }
-    .hero__line{
-      width: 170px;
-      height: 3px;
-      border-radius: 999px;
-      background: var(--blue);
-      margin-top: 18px;
-      box-shadow: 0 12px 20px rgba(46,168,255,.28);
+    foreach ($palabrasProhibidas as $palabra) {
+        if (stripos($textoLimpio, $palabra) !== false) {
+            return [
+                'valido' => false,
+                'palabra' => $palabra
+            ];
+        }
     }
 
-    /* ===== Intro 2 columnas ===== */
-    .intro{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 26px;
-      align-items:center;
-      margin: 26px 0 8px;
-    }
-    .intro__img{
-      border-radius: 12px;
-      overflow:hidden;
-      background:#eee;
-      box-shadow: 0 10px 24px rgba(15,23,42,.08);
-      aspect-ratio: 4 / 5;
-    }
-    .intro__img img{
-      width:100%;
-      height:100%;
-      display:block;
-      object-fit: cover;
-      object-position: center;
-      transform: scale(1.01);
+    // Patrones regex
+    $patronesProhibidos = [
+        '/p[u3][t7][a4@]/i',
+        '/m[i1][e3]rd[a4@]/i',
+        '/c[o0]ñ[o0]/i',
+        '/h[u3][e3]v[o0]n/i',
+        '/p[e3]nd[e3]j[o0]/i',
+        '/\bc[\s\W_]*t[\s\W_]*m\b/i',
+        '/\bh[\s\W_]*d[\s\W_]*p\b/i'
+    ];
+
+    foreach ($patronesProhibidos as $patron) {
+        if (preg_match($patron, $textoLimpio)) {
+            return [
+                'valido' => false,
+                'palabra' => 'contenido ofensivo detectado'
+            ];
+        }
     }
 
-    .intro__text{
-      display:flex;
-      gap: 14px;
-      align-items:flex-start;
-      justify-content:flex-start;
-      padding-top: 6px;
-    }
-    .intro__logo{
-      width: 58px;
-      height: 58px;
-      border-radius: 999px;
-      display:grid;
-      place-items:center;
-      background: #fff;
-      border: 1px solid var(--line);
-      box-shadow: 0 10px 22px rgba(15,23,42,.07);
-      flex: 0 0 auto;
-    }
-    .intro__logo img{
-      width: 40px;
-      height: 40px;
-      object-fit: contain;
-      display:block;
-    }
-    .intro__copy{
-      color: var(--muted);
-      font-size: 15px;
-      line-height: 1.85;
-      font-weight: 450;
-      max-width: 520px;
-    }
-    .intro__copy b, .intro__copy strong{ font-weight: 650; color: var(--ink); }
+    return ['valido' => true];
+}
+// ==========================================
+// CONFIGURACIÓN
+// ==========================================
+$usuario_id = $_SESSION['user_id'] ?? null;
+$rol = $_SESSION['rol'] ?? 'anonimo';
+$nombre = $_SESSION['nombre'] ?? 'Anónimo-' . rand(1000, 9999);
+$avatar_url = $_SESSION['avatar_url'] ?? null;
 
-    /* ===== Tabs bar ===== */
-    .tabsbar{
-      margin-top: 14px;
-      border-top: 1px solid var(--line);
-      border-bottom: 1px solid var(--line);
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap: 12px;
+if (!$usuario_id) {
+    if (isset($_POST['anonimo_id']) && $_POST['anonimo_id']) {
+        $anonimo_id = $_POST['anonimo_id'];
+    } elseif (isset($_COOKIE['anonimo_id']) && $_COOKIE['anonimo_id']) {
+        $anonimo_id = $_COOKIE['anonimo_id'];
+    } else {
+        $anonimo_id = 'anon_' . bin2hex(random_bytes(16));
+        setcookie('anonimo_id', $anonimo_id, time() + (365 * 24 * 60 * 60), '/');
     }
-
-    .tabs{
-      display:flex;
-      align-items:center;
-      gap: 24px;
-      padding-left: 6px;
-      overflow:auto;
-      -webkit-overflow-scrolling: touch;
-    }
-    .tab{
-      border:0;
-      background: transparent;
-      padding: 14px 2px;
-      font-weight: 550;
-      font-size: 13px;
-      color: #374151;
-      cursor:pointer;
-      position:relative;
-      white-space: nowrap;
-    }
-    .tab:hover{ color: var(--ink); }
-    .tab.active{ color: var(--ink); }
-    .tab.active::after{
-      content:"";
-      position:absolute;
-      left:0; right:0; bottom:-1px;
-      height: 3px;
-      border-radius: 999px;
-      background: var(--blue);
-    }
-
-    .searchWrap{
-      position:relative;
-      padding-right: 6px;
-      display:flex;
-      align-items:center;
-      gap:10px;
-    }
-    .iconBtn{
-      width: 36px;
-      height: 36px;
-      border-radius: 999px;
-      border: 1px solid var(--line);
-      background:#fff;
-      display:grid;
-      place-items:center;
-      cursor:pointer;
-      transition: transform .15s ease, box-shadow .15s ease;
-    }
-    .iconBtn:hover{
-      transform: translateY(-1px);
-      box-shadow: 0 10px 18px rgba(15,23,42,.08);
-    }
-
-    .searchPopover{
-      position:absolute;
-      top: calc(100% + 10px);
-      right: 0;
-      width: min(420px, calc(100vw - 36px));
-      background:#fff;
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      box-shadow: 0 18px 50px rgba(15,23,42,.12);
-      padding: 10px;
-      display:none;
-      z-index: 50;
-    }
-    .searchPopover.open{ display:block; }
-    .searchInput{
-      width:100%;
-      border-radius: 12px;
-      border: 1px solid var(--line);
-      padding: 12px 12px;
-      font-size: 13.5px;
-      font-weight: 500;
-      color: var(--ink);
-      outline:none;
-    }
-    .searchInput:focus{
-      border-color: rgba(46,168,255,.65);
-      box-shadow: 0 0 0 4px rgba(46,168,255,.18);
-    }
-
-    /* ===== Topbar ===== */
-    .topbar{
-      margin-top: 18px;
-      padding: 12px 12px;
-      border-radius: 14px;
-      border: 1px solid var(--line);
-      background:#fff;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap: 12px;
-    }
-
-    .dd{
-      display:flex;
-      align-items:center;
-      gap: 10px;
-      color: var(--ink);
-      font-weight: 550;
-      font-size: 13px;
-    }
-    .dd .ddIco{
-      width: 34px;
-      height: 34px;
-      border-radius: 12px;
-      display:grid;
-      place-items:center;
-      border: 1px solid var(--line);
-      background: #fff;
-      color: #111827;
-      flex: 0 0 auto;
-    }
-    .dd select{
-      border:0;
-      outline:0;
-      background: transparent;
-      font-weight: 550;
-      font-size: 13px;
-      color: var(--ink);
-      cursor:pointer;
-      padding: 6px 6px;
-    }
-
-    /* ===== Botones ===== */
-    .btn{
-      appearance:none;
-      -webkit-appearance:none;
-      border-radius: 999px;
-      height: 38px;
-      padding: 0 16px;
-      font-family: var(--font);
-      font-weight: 550;
-      font-size: 13px;
-      letter-spacing: .02em;
-      cursor:pointer;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap: 10px;
-      user-select:none;
-      transition: transform .15s ease, box-shadow .15s ease, background .15s ease, border-color .15s ease, color .15s ease;
-      white-space: nowrap;
-    }
-
-    .btn-outline{
-      background:#fff;
-      border: 1.5px solid rgba(46,168,255,.60);
-      color: var(--ink);
-      box-shadow: 0 10px 22px rgba(15,23,42,.06);
-    }
-    .btn-outline:hover{
-      transform: translateY(-1px);
-      border-color: rgba(46,168,255,.85);
-      box-shadow: 0 14px 28px rgba(15,23,42,.08);
-    }
-
-    .btn-primary{
-      background: var(--blue);
-      border: 1px solid var(--blue);
-      color:#fff;
-      box-shadow: 0 14px 28px rgba(46,168,255,.20);
-    }
-    .btn-primary:hover{
-      transform: translateY(-1px);
-      background: var(--blue-700);
-      border-color: var(--blue-700);
-      box-shadow: 0 18px 34px rgba(46,168,255,.22);
-    }
-
-    /* ===== Panel ===== */
-    .panel{
-      margin-top: 18px;
-      border-radius: 14px;
-      border: 1px solid var(--line);
-      overflow:hidden;
-      background:#fff;
-    }
-    .listHead, .row{
-      display:grid;
-      grid-template-columns: 110px 1fr 160px 110px 110px 170px;
-      gap: 12px;
-      align-items:center;
-      padding: 12px 14px;
-    }
-    .listHead{
-      color:#6b7280;
-      font-weight: 550;
-      font-size: 12px;
-      border-bottom: 1px solid var(--line);
-      background:#fff;
-    }
-    .row{
-      border-bottom: 1px solid var(--line);
-      font-size: 13.5px;
-      font-weight: 500;
-      color: var(--ink);
-      background:#fff;
-    }
-    .row:last-child{ border-bottom:0; }
-
-    .pill{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      font-weight: 550;
-      font-size: 12px;
-      border: 1px solid var(--line);
-      background: #fff;
-      color: var(--ink);
-      white-space: nowrap;
-    }
-    .pill.ok{ border-color: rgba(16,185,129,.35); background: rgba(16,185,129,.08); }
-    .pill.new{ border-color: rgba(46,168,255,.35); background: rgba(46,168,255,.10); }
-    .pill.hot{ border-color: rgba(245,158,11,.35); background: rgba(245,158,11,.10); }
-
-    .topic{
-      display:flex;
-      flex-direction:column;
-      gap:6px;
-      min-width:0;
-    }
-    .topic a{
-      color: var(--ink);
-      text-decoration:none;
-      font-weight: 600;
-      overflow:hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-    .topic a:hover{ text-decoration: underline; }
-    .topic small{
-      color: var(--muted2);
-      font-size: 12.5px;
-      font-weight: 500;
-      overflow:hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .center{ text-align:center; color:#374151; font-weight:550; }
-    .right{ text-align:right; color:#374151; font-weight:550; }
-
-    /* ===== Stats ===== */
-    .stats{
-      margin-top: 18px;
-      border-radius: 14px;
-      border: 1px solid var(--line);
-      background:#fff;
-      padding: 14px;
-      color:#374151;
-      font-size: 13px;
-    }
-    .statsRow{
-      display:flex;
-      align-items:center;
-      flex-wrap:wrap;
-      gap: 18px;
-      color:#374151;
-      font-weight: 550;
-    }
-    .statsItem{
-      display:flex;
-      align-items:center;
-      gap: 8px;
-      color:#374151;
-    }
-    .statsItem span{ color:#6b7280; font-weight: 550; }
-    .statsItem b{ font-weight: 650; }
-
-    /* ===== Vistas ===== */
-    .view{ margin-top: 18px; }
-    .box{
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      background:#fff;
-      padding: 14px;
-    }
-    .boxTitle{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap: 12px;
-      margin-bottom: 10px;
-    }
-    .boxTitle b{ font-size: 15px; font-weight: 650; }
-    .muted{ color: var(--muted2); font-weight: 550; font-size: 12.5px; }
-
-    .grid3{
-      display:grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      margin-top: 10px;
-    }
-    .cardMini{
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      padding: 12px;
-      background:#fff;
-    }
-    .cardMini b{ display:block; font-weight: 650; }
-    .cardMini small{ color: var(--muted2); font-weight: 550; }
-
-    /* ===== Modal ===== */
-    .modal{
-      position: fixed;
-      inset: 0;
-      display:none;
-      align-items:center;
-      justify-content:center;
-      padding: 18px;
-      z-index: 9999;
-    }
-    .modal.open{ display:flex; }
-    .backdrop{
-      position:absolute; inset:0;
-      background: rgba(2,6,23,.55);
-      backdrop-filter: blur(6px);
-      -webkit-backdrop-filter: blur(6px);
-    }
-    .dialog{
-      position: relative;
-      width: min(720px, 100%);
-      border-radius: 14px;
-      overflow:hidden;
-      background:#fff;
-      border: 1px solid var(--line);
-      box-shadow: 0 30px 90px rgba(2,6,23,.35);
-      transform: translateY(8px);
-      opacity: 0;
-      transition: transform .18s ease, opacity .18s ease;
-    }
-    .modal.open .dialog{ transform: translateY(0); opacity: 1; }
-    .dialogHead{
-      padding: 14px 14px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      border-bottom: 1px solid var(--line);
-      background:#fff;
-    }
-    .dialogTitle{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      color: var(--ink);
-      font-weight: 650;
-      font-size: 14px;
-    }
-    .x{
-      border: 1px solid var(--line);
-      background:#fff;
-      color: var(--ink);
-      width: 36px; height: 36px;
-      border-radius: 12px;
-      cursor:pointer;
-      display:grid; place-items:center;
-      transition: transform .15s ease;
-    }
-    .x:hover{ transform: translateY(-1px); }
-    .dialogBody{ padding: 14px; }
-    .form{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
-    .field{ display:flex; flex-direction:column; gap: 6px; }
-    .field.full{ grid-column: 1 / -1; }
-    .field label{
-      font-size: 12px;
-      color: var(--muted);
-      font-weight: 550;
-    }
-    .input, .textarea, .select{
-      width:100%;
-      border-radius: 12px;
-      border: 1px solid var(--line);
-      background:#fff;
-      padding: 11px 12px;
-      font-size: 13.5px;
-      font-weight: 500;
-      color: var(--ink);
-      outline: none;
-    }
-    .textarea{ min-height: 96px; resize: vertical; line-height:1.6; }
-    .input:focus, .textarea:focus, .select:focus{
-      border-color: rgba(46,168,255,.65);
-      box-shadow: 0 0 0 4px rgba(46,168,255,.18);
-    }
-    .help{
-      margin-top: 6px;
-      font-size: 12.5px;
-      color: var(--muted2);
-      font-weight: 500;
-      line-height:1.5;
-    }
-    .dialogFoot{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:10px;
-      padding: 14px;
-      border-top: 1px solid var(--line);
-      background:#fff;
-    }
-
-    .toast{
-      position: fixed;
-      bottom: 18px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 10000;
-      background: rgba(15,23,42,.92);
-      color:#fff;
-      padding: 12px 14px;
-      border-radius: 12px;
-      box-shadow: 0 24px 70px rgba(2,6,23,.35);
-      display:none;
-      font-weight: 500;
-      font-size: 13px;
-      max-width: min(560px, calc(100% - 30px));
-    }
-    .toast.show{ display:block; }
-
-    /* ===== Responsive ===== */
-    @media (max-width: 980px){
-      .intro{ grid-template-columns: 1fr; }
-      .hero__content{ padding: 34px 26px; }
-      .listHead{ display:none; }
-      .row{
-        grid-template-columns: 1fr;
-        gap: 10px;
-        padding: 14px;
-      }
-      .row > div{
-        display:flex;
-        justify-content:space-between;
-        gap: 12px;
-      }
-      .row > div::before{
-        content: attr(data-label);
-        color:#9ca3af;
-        font-weight: 650;
-        font-size: 11px;
-        text-transform: uppercase;
-        letter-spacing: .12em;
-        min-width: 120px;
-      }
-      .center, .right{ text-align:left; }
-      .form{ grid-template-columns: 1fr; }
-      .grid3{ grid-template-columns: 1fr; }
-      .intro__img{ aspect-ratio: 3 / 4; }
- 
-    body { font-family: system-ui, sans-serif; margin:0; padding:0; background:#f9fafb; color:#1f2937; line-height:1.6; }
-    .container { max-width:1100px; margin:0 auto; padding:20px; }
-    h1, h2 { color:#1d4ed8; }
-    .foro-header { background:#eff6ff; padding:24px; border-radius:12px; margin-bottom:24px; border:1px solid #bfdbfe; }
-    .tema { background:white; border:1px solid #e5e7eb; border-radius:10px; margin-bottom:16px; padding:16px; }
-    .tema.principal { border-left:5px solid #3b82f6; background:#f0f9ff; }
-    .tema .titulo { font-size:1.25rem; font-weight:600; margin:0 0 8px; }
-    .tema .meta { font-size:0.875rem; color:#6b7280; margin-bottom:12px; }
-    .rol-badge { font-size:0.75rem; padding:2px 8px; border-radius:999px; font-weight:600; }
-    .rol-admin  { background:#1e40af; color:white; }
-    .rol-esp    { background:#065f46; color:white; }
-    .rol-usuario{ background:#047857; color:white; }
-    .rol-anon   { background:#9ca3af; color:white; }
-    .respuestas { margin-left:32px; margin-top:16px; border-left:2px solid #e5e7eb; padding-left:16px; }
-    .form-simple { margin:16px 0; }
-    .form-simple textarea { width:100%; min-height:90px; padding:10px; border:1px solid #d1d5db; border-radius:6px; }
-    .btn { background:#1d4ed8; color:white; border:none; padding:8px 16px; border-radius:6px; cursor:pointer; font-weight:500; }
-    .btn-admin { background:#b91c1c; }
-    .likes { color:#f59e0b; font-weight:600; cursor:pointer; }
-    }
-
-    /* ===== Responsive PRO (móvil primero) ===== */
-
-/* Tablets y abajo */
-@media (max-width: 980px){
-  .container{ padding: 0 14px; }
-
-  .hero{ min-height: 240px; }
-  .hero__content{ padding: 28px 18px; }
-  .hero__overlay{
-    background: linear-gradient(180deg, rgba(2,6,23,.72), rgba(2,6,23,.22));
-  }
-  .hero__title{
-    letter-spacing: .06em;
-    font-size: clamp(26px, 7vw, 44px);
-  }
-  .hero__subtitle{ font-size: 12px; letter-spacing: .10em; }
-
-  .intro{ grid-template-columns: 1fr; gap: 16px; }
-  .intro__img{ aspect-ratio: 16 / 10; } /* ✅ mejor en móvil */
-  .intro__text{ gap: 12px; }
-  .intro__logo{ width: 52px; height: 52px; }
-  .intro__copy{ font-size: 14px; line-height: 1.8; max-width: 100%; }
-
-  /* Tabsbar: apilar */
-  .tabsbar{
-    flex-direction: column;
-    align-items: stretch;
-    gap: 10px;
-    padding: 10px 0;
-  }
-  .tabs{
-    padding-left: 0;
-    gap: 14px;
-  }
-  .tab{ padding: 12px 2px; }
-
-  .searchWrap{
-    justify-content: flex-end;
-    padding-right: 0;
-  }
-  .searchPopover{
-    right: 0;
-    left: 0;                 /* ✅ ocupa ancho */
-    width: auto;             /* ✅ */
-    max-width: 100%;
-  }
-
-  /* Topbar: columna + botones a full */
-  .topbar{
-    flex-direction: column;
-    align-items: stretch;
-    gap: 10px;
-  }
-  .dd{
-    width: 100%;
-    justify-content: space-between;
-  }
-  .dd select{
-    width: 100%;
-    max-width: 220px;
-    text-align: right;
-  }
-
-  /* Contenedor de botones (tu div inline) */
-  .topbar > div:last-child{
-    width: 100%;
-    justify-content: stretch !important;
-  }
-
-  /* Botones: más cómodos */
-  .btn{
-    height: 42px;
-    padding: 0 16px;
-    width: 100%;
-    justify-content: center;
-  }
-
-  /* Panel lista */
-  .listHead{ display:none; }
-  .row{
-    grid-template-columns: 1fr;
-    gap: 10px;
-    padding: 14px 12px;
-  }
-/* ✅ Mobile: label arriba + contenido abajo (no aplasta) */
-.row > div{
-  display:flex;
-  flex-direction:column;
-  align-items:flex-start;
-  justify-content:flex-start;
-  gap: 6px;
+} else {
+    $anonimo_id = null;
 }
 
-/* label */
-.row > div::before{
-  content: attr(data-label);
-  color:#9ca3af;
-  font-weight: 650;
-  font-size: 10.5px;
-  text-transform: uppercase;
-  letter-spacing: .10em;
-}
-
-/* ✅ permitir que el título/desc hagan wrap en móvil */
-.topic a{
-  white-space: normal;
-  overflow: visible;
-  text-overflow: unset;
-  line-height: 1.35;
-}
-.topic small{
-  white-space: normal;
-  overflow: visible;
-  text-overflow: unset;
-  line-height: 1.45;
-}
-
-/* alineaciones */
-.center, .right{ text-align:left; }
-
-
-  /* Modal */
-  .dialog{ width: 100%; }
-  .form{ grid-template-columns: 1fr; }
-  .dialogFoot{
-    flex-direction: column;
-    align-items: stretch;
-    gap: 10px;
-  }
-  .dialogFoot > div:last-child{
-    justify-content: stretch !important;
-  }
-}
-
-/* Celulares chicos */
-@media (max-width: 420px){
-  .ly-pagehead{ padding: 10px 12px; gap: 10px; }
-  .ly-pagehead__title{ font-size: 12px; letter-spacing: .10em; }
-  .ly-pagehead__icon{ width: 32px; height: 32px; }
-
-  .hero{ border-radius: 16px; }
-  .hero__line{ width: 130px; }
-
-  .row > div::before{
-    min-width: 84px;
-    font-size: 10px;
-  }
-
-  .pill{ font-size: 11px; padding: 6px 9px; }
-  .topic a{ font-size: 13.5px; }
-  .topic small{ font-size: 12px; }
-}
-
-  </style>
-</head>
-
-<body>
-  <?php include 'header.php'; ?>
-
-  <main class="max-w-7xl mx-auto px-4 py-10 flex-1 space-y-16">
-
-    <div class="text-center mb-10">
-      <div class="ly-pagehead">
-        <span class="ly-pagehead__icon">
-          <!-- ✅ ICONO MEJOR (simple y consistente) -->
-          <i class="ph-chats-circle text-lg"></i> 
-        </span>
-        <span class="ly-pagehead__title">BioForo</span>
-      </div>
-    </div>
-
-    <div class="container">
-      <!-- HERO -->
-      <section class="hero" aria-label="BioForo Hero">
-        <div class="hero__bg" style="background-image:url('https://lyriumbiomarketplace.com/wp-content/uploads/2025/06/bioforo_banner-scaled.jpg');"></div>
-        <div class="hero__overlay"></div>
-
-        <div class="hero__content">
-          <h1 class="hero__title">Conecta BioForo</h1>
-          <p class="hero__subtitle">Explora foros destacados, nuevas ideas y comunidad</p>
-          <div class="hero__line"></div>
-        </div>
-      </section>
-
-      <!-- INTRO -->
-      <section class="intro" aria-label="BioForo Introducción">
-        <div class="intro__img">
-          <img src="https://lyriumbiomarketplace.com/wp-content/uploads/2025/10/Fondos_BioBlog-4.png" alt="BioForo">
-        </div>
-
-        <div class="intro__text">
-          <div class="intro__logo" aria-hidden="true">
-            <img src="https://lyriumbiomarketplace.com/wp-content/uploads/2025/10/Fondos_BioBlog-4.png" alt="">
-          </div>
-          <div class="intro__copy">
-            <strong>BioForo</strong> es el espacio donde expertos, emprendedores y entusiastas del biocomercio,
-            biotecnología, salud natural y sostenibilidad se conectan, comparten conocimientos y resuelven dudas.
-          </div>
-        </div>
-      </section>
-
-
-<?php
-
-// Determinar rol y nombre del usuario
-$usuario = null;
-$rol = 'anonimo';
-$nombre = 'Anónimo-' . rand(1000, 9999);
-
-if (isset($_SESSION['user_id'])) {
-    $usuario = $_SESSION['user_id'];
-    $rol     = $_SESSION['rol'] ?? 'usuario';
-    $nombre  = $_SESSION['nombre'] ?? 'Usuario';
-}
-
-// Conexión a la base de datos
 try {
-    $pdo = new PDO(
-        "mysql:host=localhost;dbname=lyrium;charset=utf8mb4",
-        "root",
-        ""
-    );
+    $pdo = new PDO("mysql:host=localhost:3308;dbname=lyrium;charset=utf8mb4", "root", "");
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 } catch (PDOException $e) {
-    die("Error de conexión: " . $e->getMessage());
+    die(json_encode(['success' => false, 'error' => 'Error de conexión: ' . $e->getMessage()]));
 }
 
-// Crear nuevo foro (solo admin)
-if (isset($_POST['action']) && $_POST['action'] === 'crear_foro' && $rol === 'admin') {
-    $nombre_foro = trim($_POST['nombre'] ?? '');
-    if ($nombre_foro && strlen($nombre_foro) >= 3) {
-        $slug = strtolower(preg_replace('/[^a-z0-9]+/i', '-', $nombre_foro));
-        $stmt = $pdo->prepare("INSERT INTO bioforo_categorias (nombre, slug) VALUES (?, ?)");
-        $stmt->execute([$nombre_foro, $slug]);
-    }
-}
+// ==========================================
+// FUNCIONES AUXILIARES CORREGIDAS
+// ==========================================
 
-// Crear tema nuevo
-if (isset($_POST['action']) && $_POST['action'] === 'nuevo_tema') {
-    $titulo    = trim($_POST['titulo'] ?? '');
-    $contenido = trim($_POST['contenido'] ?? '');
-    $cat_id    = (int)($_POST['categoria'] ?? 0);
+function obtenerReaccionUsuario($pdo, $tema_id, $respuesta_id, $usuario_id, $anonimo_id)
+{
+    try {
+        $sql = "SELECT tipo FROM bioforo_reacciones WHERE ";
+        $params = [];
 
-    // Límites de caracteres
-    if (mb_strlen($titulo) > 120)    $titulo = mb_substr($titulo, 0, 120);
-    if (mb_strlen($contenido) > 400) $contenido = mb_substr($contenido, 0, 400);
-
-    // Filtro de lenguaje ofensivo - BLOQUEAR
-    $badwords = [
-        'mierda', 'mierd', 'mrd', 'joder', 'jod', 'puta', 'puto', 'put4', 'cabrón', 'cabron',
-        'pendejo', 'pendej', 'carajo', 'hijo de puta', 'hdp', 'hijueputa', 'hp', 'coño',
-        'culiao', 'culero', 'marica', 'maric', 'verga', 'vrg', 'concha', 'huevon', 'gil'
-    ];
-
-    $contenido_lower = mb_strtolower($contenido);
-    $is_bad = false;
-    foreach ($badwords as $word) {
-        if (strpos($contenido_lower, $word) !== false) {
-            $is_bad = true;
-            break;
+        if ($respuesta_id) {
+            $sql .= "respuesta_id = ? ";
+            $params[] = $respuesta_id;
+        } else {
+            $sql .= "tema_id = ? ";
+            $params[] = $tema_id;
         }
-    }
 
-    if ($is_bad) {
-        echo '<div style="color:red; padding:10px; background:#fee2e2; border:1px solid #fecaca; border-radius:6px; margin:10px 0;">
-                No se permiten palabras ofensivas o lenguaje inapropiado. Por favor, modifica tu mensaje.
-              </div>';
-    } elseif ($titulo && $contenido && $cat_id > 0) {
-        $stmt = $pdo->prepare("
-            INSERT INTO bioforo_temas 
-            (categoria_id, usuario_id, anonimo_nombre, rol, titulo, contenido)
-            VALUES (?, ?, ?, ?, ?, ?)
-        ");
-        $stmt->execute([$cat_id, $usuario, $usuario ? null : $nombre, $rol, $titulo, $contenido]);
-    }
-}
-
-// Crear respuesta
-if (isset($_POST['action']) && $_POST['action'] === 'responder' && isset($_POST['tema_id'])) {
-    $tema_id   = (int)$_POST['tema_id'];
-    $contenido = trim($_POST['contenido'] ?? '');
-
-    if (mb_strlen($contenido) > 1500) $contenido = mb_substr($contenido, 0, 1500);
-
-    // Filtro de lenguaje ofensivo - BLOQUEAR
-    $badwords = [
-        'mierda', 'mierd', 'mrd', 'joder', 'jod', 'puta', 'puto', 'put4', 'cabrón', 'cabron',
-        'pendejo', 'pendej', 'carajo', 'hijo de puta', 'hdp', 'hijueputa', 'hp', 'coño',
-        'culiao', 'culero', 'marica', 'maric', 'verga', 'vrg', 'concha', 'huevon', 'gil'
-    ];
-
-    $contenido_lower = mb_strtolower($contenido);
-    $is_bad = false;
-    foreach ($badwords as $word) {
-        if (strpos($contenido_lower, $word) !== false) {
-            $is_bad = true;
-            break;
+        if ($usuario_id) {
+            $sql .= "AND usuario_id = ? ";
+            $params[] = $usuario_id;
+        } elseif ($anonimo_id) {
+            $sql .= "AND anonimo_id = ? ";
+            $params[] = $anonimo_id;
+        } else {
+            return null;
         }
-    }
 
-    if ($is_bad) {
-        echo '<div style="color:red; padding:10px; background:#fee2e2; border:1px solid #fecaca; border-radius:6px; margin:10px 0;">
-                No se permiten palabras ofensivas o lenguaje inapropiado. Por favor, modifica tu mensaje.
-              </div>';
-    } elseif ($contenido && $tema_id > 0) {
-        $stmt = $pdo->prepare("
-            INSERT INTO bioforo_respuestas 
-            (tema_id, usuario_id, anonimo_nombre, rol, contenido)
-            VALUES (?, ?, ?, ?, ?)
-        ");
-        $stmt->execute([$tema_id, $usuario, $usuario ? null : $nombre, $rol, $contenido]);
+        $sql .= "LIMIT 1";
+
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute($params);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result ? $result['tipo'] : null;
+    } catch (Exception $e) {
+        error_log("Error obtenerReaccionUsuario: " . $e->getMessage());
+        return null;
     }
 }
 
-// Listado de categorías
-$categorias = $pdo->query("SELECT * FROM bioforo_categorias ORDER BY nombre")->fetchAll(PDO::FETCH_ASSOC);
+function obtenerConteosReaccionesTema($pdo, $tema_id)
+{
+    try {
+        $stmt = $pdo->prepare("
+            SELECT 
+                likes_count, love_count, haha_count, 
+                wow_count, sad_count, angry_count, total_reacciones
+            FROM bioforo_temas 
+            WHERE id = ?
+        ");
+        $stmt->execute([$tema_id]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-// Listado de temas (más votados primero)
+        // Asegurar que todos los valores existan
+        return array_merge([
+            'likes_count' => 0,
+            'love_count' => 0,
+            'haha_count' => 0,
+            'wow_count' => 0,
+            'sad_count' => 0,
+            'angry_count' => 0,
+            'total_reacciones' => 0
+        ], $result ?: []);
+    } catch (Exception $e) {
+        error_log("Error obtenerConteosReaccionesTema: " . $e->getMessage());
+        return [
+            'likes_count' => 0,
+            'love_count' => 0,
+            'haha_count' => 0,
+            'wow_count' => 0,
+            'sad_count' => 0,
+            'angry_count' => 0,
+            'total_reacciones' => 0
+        ];
+    }
+}
+
+function obtenerConteosReaccionesRespuesta($pdo, $respuesta_id)
+{
+    try {
+        $stmt = $pdo->prepare("
+            SELECT 
+                likes_count, love_count, haha_count, 
+                wow_count, sad_count, angry_count, total_reacciones
+            FROM bioforo_respuestas 
+            WHERE id = ?
+        ");
+        $stmt->execute([$respuesta_id]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // Asegurar que todos los valores existan
+        return array_merge([
+            'likes_count' => 0,
+            'love_count' => 0,
+            'haha_count' => 0,
+            'wow_count' => 0,
+            'sad_count' => 0,
+            'angry_count' => 0,
+            'total_reacciones' => 0
+        ], $result ?: []);
+    } catch (Exception $e) {
+        error_log("Error obtenerConteosReaccionesRespuesta: " . $e->getMessage());
+        return [
+            'likes_count' => 0,
+            'love_count' => 0,
+            'haha_count' => 0,
+            'wow_count' => 0,
+            'sad_count' => 0,
+            'angry_count' => 0,
+            'total_reacciones' => 0
+        ];
+    }
+}
+
+// ==========================================
+// API ENDPOINTS CORREGIDOS
+// ==========================================
+if (isset($_POST['action'])) {
+    header('Content-Type: application/json');
+
+    // OBTENER ESTADO DE REACCIONES
+    if ($_POST['action'] === 'get_user_reactions') {
+        $tema_ids = $_POST['tema_ids'] ?? [];
+        $respuesta_ids = $_POST['respuesta_ids'] ?? [];
+        $reactions = [];
+
+        foreach ($tema_ids as $tema_id) {
+            $reaction = obtenerReaccionUsuario($pdo, $tema_id, null, $usuario_id, $anonimo_id);
+            if ($reaction) {
+                $reactions['tema_' . $tema_id] = $reaction;
+            }
+        }
+
+        foreach ($respuesta_ids as $respuesta_id) {
+            $reaction = obtenerReaccionUsuario($pdo, null, $respuesta_id, $usuario_id, $anonimo_id);
+            if ($reaction) {
+                $reactions['respuesta_' . $respuesta_id] = $reaction;
+            }
+        }
+
+        echo json_encode(['success' => true, 'reactions' => $reactions]);
+        exit;
+    }
+
+    // TOGGLE REACCIÓN TEMA
+    if ($_POST['action'] === 'toggle_reaccion_tema') {
+        $tema_id = (int)$_POST['tema_id'];
+        $tipo = $_POST['tipo'] ?? 'like';
+
+        $tipos_validos = ['like', 'love', 'haha', 'wow', 'sad', 'angry'];
+        if (!in_array($tipo, $tipos_validos)) {
+            echo json_encode(['success' => false, 'error' => 'Tipo inválido']);
+            exit;
+        }
+
+        try {
+            $stmt = $pdo->prepare("CALL sp_toggle_reaccion(?, NULL, ?, ?, ?)");
+            $stmt->execute([$tema_id, $usuario_id, $anonimo_id, $tipo]);
+
+            $action = $stmt->fetch(PDO::FETCH_ASSOC);
+            $stmt->nextRowset();
+            $stats = $stmt->fetch(PDO::FETCH_ASSOC);
+            $stmt->closeCursor();
+
+            $user_reaction = ($action['action'] ?? '') === 'deleted' ? null : $tipo;
+
+            echo json_encode([
+                'success' => true,
+                'action' => $action['action'] ?? 'unknown',
+                'user_reaction' => $user_reaction,
+                'counts' => [
+                    'likes_count' => (int)($stats['likes_count'] ?? 0),
+                    'love_count' => (int)($stats['love_count'] ?? 0),
+                    'haha_count' => (int)($stats['haha_count'] ?? 0),
+                    'wow_count' => (int)($stats['wow_count'] ?? 0),
+                    'sad_count' => (int)($stats['sad_count'] ?? 0),
+                    'angry_count' => (int)($stats['angry_count'] ?? 0),
+                    'total_reacciones' => (int)($stats['total_reacciones'] ?? 0)
+                ]
+            ]);
+        } catch (Exception $e) {
+            error_log("Error toggle_reaccion_tema: " . $e->getMessage());
+            echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+        }
+        exit;
+    }
+
+    // TOGGLE REACCIÓN RESPUESTA - SOLO LIKE Y ANGRY
+    if ($_POST['action'] === 'toggle_reaccion_respuesta') {
+        $respuesta_id = (int)$_POST['respuesta_id'];
+        $tipo = $_POST['tipo'] ?? 'like';
+
+        // Solo permitir like y angry para respuestas
+        if ($tipo !== 'like' && $tipo !== 'angry') {
+            echo json_encode(['success' => false, 'error' => 'Solo like/angry permitidos para respuestas']);
+            exit;
+        }
+
+        try {
+            $stmt = $pdo->prepare("CALL sp_toggle_reaccion(NULL, ?, ?, ?, ?)");
+            $stmt->execute([$respuesta_id, $usuario_id, $anonimo_id, $tipo]);
+
+            $action = $stmt->fetch(PDO::FETCH_ASSOC);
+            $stmt->nextRowset();
+            $stats = $stmt->fetch(PDO::FETCH_ASSOC);
+            $stmt->closeCursor();
+
+            $user_reaction = ($action['action'] ?? '') === 'deleted' ? null : $tipo;
+
+            echo json_encode([
+                'success' => true,
+                'action' => $action['action'] ?? 'unknown',
+                'user_reaction' => $user_reaction,
+                'counts' => [
+                    'likes_count' => (int)($stats['likes_count'] ?? 0),
+                    'angry_count' => (int)($stats['angry_count'] ?? 0),
+                    'total_reacciones' => (int)($stats['total_reacciones'] ?? 0)
+                ]
+            ]);
+        } catch (Exception $e) {
+            error_log("Error toggle_reaccion_respuesta: " . $e->getMessage());
+            echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+        }
+        exit;
+    }
+
+    // CREAR TEMA
+    if (isset($_POST['action'])) {
+        header('Content-Type: application/json');
+
+        // CREAR TEMA
+        if ($_POST['action'] === 'nuevo_tema_ajax') {
+            $titulo = trim($_POST['titulo'] ?? '');
+            $contenido = trim($_POST['contenido'] ?? '');
+            $cat_id = (int)($_POST['categoria'] ?? 0);
+
+            // ✅ VALIDAR TÍTULO
+            $validacionTitulo = validarContenidoOfensivo($titulo);
+            if (!$validacionTitulo['valido']) {
+                echo json_encode([
+                    'success' => false,
+                    'error' => 'El título contiene palabras inapropiadas:  "' . $validacionTitulo['palabra'] . '"'
+                ]);
+                exit;
+            }
+
+            // ✅ VALIDAR CONTENIDO
+            $validacionContenido = validarContenidoOfensivo($contenido);
+            if (!$validacionContenido['valido']) {
+                echo json_encode([
+                    'success' => false,
+                    'error' => 'El contenido contiene palabras inapropiadas: "' . $validacionContenido['palabra'] .  '"'
+                ]);
+                exit;
+            }
+
+            if (mb_strlen($titulo) > 180) $titulo = mb_substr($titulo, 0, 180);
+            if (mb_strlen($contenido) > 2000) $contenido = mb_substr($contenido, 0, 2000);
+
+            if ($titulo && $contenido && $cat_id > 0) {
+                try {
+                    $pdo->beginTransaction();
+
+                    $stmt = $pdo->prepare("
+                    INSERT INTO bioforo_temas 
+                    (categoria_id, usuario_id, anonimo_nombre, rol, titulo, contenido) 
+                    VALUES (?, ?, ?, ?, ?, ?)
+                ");
+                    $stmt->execute([
+                        $cat_id,
+                        $usuario_id,
+                        $usuario_id ?  null : $nombre,
+                        $rol,
+                        $titulo,
+                        $contenido
+                    ]);
+
+                    $nuevo_tema_id = $pdo->lastInsertId();
+                    $pdo->commit();
+
+                    echo json_encode([
+                        'success' => true,
+                        'id' => $nuevo_tema_id,
+                        'redirect' => '? tema=' . $nuevo_tema_id .  '#tema-' . $nuevo_tema_id
+                    ]);
+                } catch (Exception $e) {
+                    $pdo->rollBack();
+                    error_log("Error nuevo_tema_ajax: " . $e->getMessage());
+                    echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+                }
+            } else {
+                echo json_encode(['success' => false, 'error' => 'Campos incompletos']);
+            }
+            exit;
+        }
+
+        // CREAR RESPUESTA CON CITA - CORREGIDO
+        if ($_POST['action'] === 'responder_ajax') {
+            $tema_id = (int)$_POST['tema_id'];
+            $contenido = trim($_POST['contenido'] ?? '');
+            $cita_id = null;
+
+            if (isset($_POST['cita_id']) && $_POST['cita_id'] !== '' && $_POST['cita_id'] !== '0') {
+                $cita_id = (int)$_POST['cita_id'];
+                if ($cita_id <= 0) $cita_id = null;
+            }
+
+            if (empty($contenido) || $tema_id <= 0) {
+                echo json_encode(['success' => false, 'error' => 'Contenido vacío']);
+                exit;
+            }
+
+            // ✅ VALIDAR RESPUESTA
+            $validacion = validarContenidoOfensivo($contenido);
+            if (!$validacion['valido']) {
+                echo json_encode([
+                    'success' => false,
+                    'error' => 'Tu respuesta contiene lenguaje ofensivo:  "' . $validacion['palabra'] . '"'
+                ]);
+                exit;
+            }
+        }
+
+        if (mb_strlen($contenido) > 1500) {
+            $contenido = mb_substr($contenido, 0, 1500);
+        }
+
+        try {
+            $pdo->beginTransaction();
+
+            // Verificar que el tema existe
+            $stmt = $pdo->prepare("SELECT id FROM bioforo_temas WHERE id = ? AND estado = 'activo'");
+            $stmt->execute([$tema_id]);
+            if (!$stmt->fetch()) {
+                throw new Exception("El tema no existe");
+            }
+
+            $respuesta_a_id = null;
+            $cita_autor = null;
+            $cita_contenido = null;
+
+            // Si hay cita, obtener sus datos
+            if ($cita_id !== null) {
+                $stmt = $pdo->prepare("
+                    SELECT r.id, COALESCE(u.username, r.anonimo_nombre) as autor, r.contenido
+                    FROM bioforo_respuestas r
+                    LEFT JOIN usuarios u ON u.id = r.usuario_id
+                    WHERE r.id = ? AND r.tema_id = ? AND r.estado = 'activo'
+                ");
+                $stmt->execute([$cita_id, $tema_id]);
+                $cita_data = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                if ($cita_data) {
+                    $respuesta_a_id = $cita_id;
+                    $cita_autor = $cita_data['autor'];
+                    $cita_contenido = mb_substr($cita_data['contenido'], 0, 150);
+                }
+            }
+
+            // Determinar rol y nombre
+            if ($usuario_id) {
+                $stmt = $pdo->prepare("SELECT username, rol FROM usuarios WHERE id = ?");
+                $stmt->execute([$usuario_id]);
+                $user_data = $stmt->fetch(PDO::FETCH_ASSOC);
+                $rol_usuario = $user_data['rol'] ?? 'usuario';
+                $nombre_usuario = $user_data['username'] ?? 'Usuario';
+            } else {
+                $rol_usuario = 'anonimo';
+                $nombre_usuario = $_SESSION['anonimo_nombre'] ?? 'Anónimo-' . rand(1000, 9999);
+            }
+
+            // Insertar respuesta
+            $stmt = $pdo->prepare("
+                INSERT INTO bioforo_respuestas 
+                (tema_id, usuario_id, anonimo_nombre, rol, contenido, respuesta_a_id) 
+                VALUES (?, ?, ?, ?, ?, ?)
+            ");
+            $stmt->execute([
+                $tema_id,
+                $usuario_id ?: null,
+                $usuario_id ? null : $nombre_usuario,
+                $rol_usuario,
+                $contenido,
+                $respuesta_a_id
+            ]);
+
+            $respuesta_id = $pdo->lastInsertId();
+
+            // Obtener la respuesta recién insertada con datos de cita
+            $resp = $pdo->prepare("
+                SELECT r.*, 
+                       COALESCE(u.username, r.anonimo_nombre) as autor,
+                       u.avatar_url,
+                       parent.id as cita_id,
+                       COALESCE(u_parent.username, parent.anonimo_nombre) as cita_autor,
+                       parent.contenido as cita_contenido
+                FROM bioforo_respuestas r
+                LEFT JOIN usuarios u ON u.id = r.usuario_id
+                LEFT JOIN bioforo_respuestas parent ON parent.id = r.respuesta_a_id
+                LEFT JOIN usuarios u_parent ON u_parent.id = parent.usuario_id
+                WHERE r.id = ?
+            ");
+            $resp->execute([$respuesta_id]);
+            $respuesta_data = $resp->fetch(PDO::FETCH_ASSOC);
+
+            // Contar total de respuestas
+            $count_total = $pdo->prepare("
+                SELECT COUNT(*) as total 
+                FROM bioforo_respuestas 
+                WHERE tema_id = ? AND estado = 'activo'
+            ");
+            $count_total->execute([$tema_id]);
+            $total_respuestas = $count_total->fetch(PDO::FETCH_ASSOC)['total'];
+
+            $pdo->commit();
+
+            echo json_encode([
+                'success' => true,
+                'respuesta_id' => $respuesta_id,
+                'autor' => $respuesta_data['autor'] ?? 'Anónimo',
+                'contenido' => $contenido,
+                'fecha' => date('d M H:i'),
+                'total_respuestas' => $total_respuestas,
+                'cita_autor' => $respuesta_data['cita_autor'] ?? null,
+                'cita_contenido' => $respuesta_data['cita_contenido'] ?? null,
+                'cita_id' => $respuesta_data['cita_id'] ?? null
+            ]);
+        } catch (Exception $e) {
+            $pdo->rollBack();
+            error_log("Error responder_ajax: " . $e->getMessage());
+            echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+        }
+        exit;
+    }
+
+    // CARGAR MÁS RESPUESTAS - CORREGIDO PARA MOSTRAR CITAS
+    if ($_POST['action'] === 'cargar_mas_respuestas') {
+        $tema_id = (int)$_POST['tema_id'];
+        $offset = (int)($_POST['offset'] ?? 3);
+
+        try {
+            $stmt = $pdo->prepare("
+                SELECT r.*, 
+                       COALESCE(u.username, r.anonimo_nombre) as autor,
+                       u.avatar_url,
+                       parent.id as cita_id,
+                       COALESCE(u_parent.username, parent.anonimo_nombre) as cita_autor,
+                       parent.contenido as cita_contenido
+                FROM bioforo_respuestas r
+                LEFT JOIN usuarios u ON u.id = r.usuario_id
+                LEFT JOIN bioforo_respuestas parent ON parent.id = r.respuesta_a_id
+                LEFT JOIN usuarios u_parent ON u_parent.id = parent.usuario_id
+                WHERE r.tema_id = ? AND r.estado = 'activo'
+                ORDER BY r.creado_en DESC
+                LIMIT ?, 1000
+            ");
+            $stmt->bindValue(1, $tema_id, PDO::PARAM_INT);
+            $stmt->bindValue(2, $offset, PDO::PARAM_INT);
+            $stmt->execute();
+
+            $respuestas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $html = '';
+
+            foreach ($respuestas as $r) {
+                $reaccion_usuario = obtenerReaccionUsuario($pdo, null, $r['id'], $usuario_id, $anonimo_id);
+                $reacciones_data = obtenerConteosReaccionesRespuesta($pdo, $r['id']);
+
+                $like_class = $reaccion_usuario === 'like' ? 'active-like' : '';
+                $angry_class = $reaccion_usuario === 'angry' ? 'active-angry' : '';
+                $like_icon = $reaccion_usuario === 'like' ? 'ph-thumbs-up-fill' : 'ph-thumbs-up';
+                $angry_icon = $reaccion_usuario === 'angry' ? 'ph-thumbs-down-fill' : 'ph-thumbs-down';
+
+                // Generar HTML de cita si existe
+                $cita_html = '';
+                if (!empty($r['cita_contenido'])) {
+                    $cita_autor = $r['cita_autor'] ?? 'Anónimo';
+                    $cita_contenido = mb_substr($r['cita_contenido'], 0, 100);
+                    $cita_html = '
+                    <div class="quote-box-whatsapp mb-2">
+                        <div class="quote-author-whatsapp">' . htmlspecialchars($cita_autor) . '</div>
+                        <div class="quote-text-whatsapp">' . nl2br(htmlspecialchars($cita_contenido)) . '</div>
+                    </div>';
+                }
+
+                $html .= '
+                <div class="bg-slate-50 rounded-lg p-3 border border-slate-200 respuesta-item" id="respuesta-' . $r['id'] . '">
+                    <div class="flex items-start gap-2">
+                        <div class="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 text-xs font-bold flex-shrink-0 mt-0.5">
+                            ' . strtoupper(substr($r['autor'], 0, 1)) . '
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="font-medium text-slate-800 text-sm">' . htmlspecialchars($r['autor']) . '</span>
+                                <span class="text-xs text-slate-500">' . date('d M H:i', strtotime($r['creado_en'])) . '</span>
+                            </div>
+                            ' . $cita_html . '
+                            <p class="text-slate-600 text-sm mb-2">' . nl2br(htmlspecialchars($r['contenido'])) . '</p>
+                            
+                            <div class="flex items-center gap-3">
+                                <button onclick="toggleReactionRespuesta(' . $r['id'] . ', \'like\')"
+                                    class="flex items-center gap-1 text-xs text-slate-500 hover:text-blue-600 transition-colors ' . $like_class . '"
+                                    id="like-btn-' . $r['id'] . '">
+                                    <i class="' . $like_icon . '"></i>
+                                    <span class="resp-likes-' . $r['id'] . '">' . ($reacciones_data['likes_count'] ?? 0) . '</span>
+                                </button>
+                                <button onclick="toggleReactionRespuesta(' . $r['id'] . ', \'angry\')"
+                                    class="flex items-center gap-1 text-xs text-slate-500 hover:text-red-600 transition-colors ' . $angry_class . '"
+                                    id="angry-btn-' . $r['id'] . '">
+                                    <i class="' . $angry_icon . '"></i>
+                                    <span class="resp-angry-' . $r['id'] . '">' . ($reacciones_data['angry_count'] ?? 0) . '</span>
+                                </button>
+                                <button onclick="citarRespuesta(' . $tema_id . ', ' . $r['id'] . ', \'' . htmlspecialchars($r['autor'], ENT_QUOTES) . '\', \'' . htmlspecialchars(addslashes($r['contenido']), ENT_QUOTES) . '\')"
+                                    class="text-xs text-slate-500 hover:text-emerald-600 transition-colors">
+                                    Responder
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>';
+            }
+
+            echo json_encode([
+                'success' => true,
+                'html' => $html,
+                'count' => count($respuestas)
+            ]);
+        } catch (Exception $e) {
+            error_log("Error cargar_mas_respuestas: " . $e->getMessage());
+            echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+        }
+        exit;
+    }
+
+    // ✅ CARGAR TODOS LOS TEMAS RESTANTES
+    if ($_POST['action'] === 'cargar_mas_temas') {
+        $categoria_filtro = (int)($_POST['categoria'] ?? 0);
+        $temas_ya_cargados = $_POST['temas_cargados'] ?? [];
+
+        $where_categoria = $categoria_filtro > 0 ? "AND t.categoria_id = $categoria_filtro" : "";
+
+        // Construir exclusión de IDs ya cargados
+        $where_exclude = "";
+        if (!empty($temas_ya_cargados) && is_array($temas_ya_cargados)) {
+            $ids_safe = array_map('intval', $temas_ya_cargados);
+            $where_exclude = "AND t.id NOT IN (" .  implode(',', $ids_safe) . ")";
+        }
+
+        try {
+            $stmt = $pdo->prepare("
+            SELECT t.*,
+                   c.nombre AS cat_nombre,
+                   COALESCE(u.username, t.anonimo_nombre) AS autor,
+                   u.avatar_url,
+                   TIMESTAMPDIFF(HOUR, t.creado_en, NOW()) as horas_desde_creacion
+            FROM bioforo_temas t
+            LEFT JOIN bioforo_categorias c ON c.id = t.categoria_id
+            LEFT JOIN usuarios u ON u.id = t. usuario_id
+            WHERE t.estado = 'activo' $where_categoria $where_exclude
+            ORDER BY t.creado_en DESC
+        ");
+            $stmt->execute();
+
+            $nuevos_temas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            // Cargar reacciones para cada tema
+            foreach ($nuevos_temas as &$tema) {
+                $tema['user_reaction'] = obtenerReaccionUsuario($pdo, $tema['id'], null, $usuario_id, $anonimo_id);
+                $tema['reacciones'] = obtenerConteosReaccionesTema($pdo, $tema['id']);
+            }
+
+            // Generar HTML COMPLETO
+            ob_start();
+            foreach ($nuevos_temas as $tema):
+                $reaccion_usuario_tema = $tema['user_reaction'];
+                $reacciones_tema_data = $tema['reacciones'];
+                $total_reacciones_tema = $reacciones_tema_data['total_reacciones'] ?? 0;
+
+                $count_resp = $pdo->prepare("SELECT COUNT(*) as total FROM bioforo_respuestas WHERE tema_id = ?  AND estado = 'activo'");
+                $count_resp->execute([$tema['id']]);
+                $total_respuestas_tema = $count_resp->fetch(PDO::FETCH_ASSOC)['total'];
+?>
+                <div id="tema-<?= $tema['id'] ?>"
+                    class="tema-item tema-cargado-despues bg-white rounded-xl md:rounded-2xl p-4 md:p-6 shadow-sm border border-slate-200 hover:shadow-md transition-all duration-300"
+                    data-tema-extra="true"
+                    style="animation: fadeIn 0.5s ease;">
+
+                    <div class="tema-header flex items-start justify-between mb-4">
+                        <div class="flex-1 flex items-start gap-3">
+                            <div class="tema-avatar w-12 h-12 md:w-14 md:h-14 rounded-full bg-gradient-to-br from-blue-100 to-emerald-100 flex items-center justify-center text-blue-700 font-bold text-lg md:text-xl flex-shrink-0">
+                                <?= strtoupper(substr($tema['autor'], 0, 1)) ?>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <div class="flex flex-col md:flex-row md:items-center justify-between gap-2 mb-2">
+                                    <div>
+                                        <h4 class="font-bold text-slate-800 text-base md:text-lg"><?= htmlspecialchars($tema['autor']) ?></h4>
+                                        <div class="flex items-center gap-2 text-xs md:text-sm text-slate-500">
+                                            <span><i class="ph-clock"></i> <?= date('d M Y H:i', strtotime($tema['creado_en'])) ?></span>
+                                            <span class="hidden md:inline">•</span>
+                                            <span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-700">
+                                                <?= htmlspecialchars($tema['cat_nombre'] ?? 'General') ?>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="tema-stats flex flex-row items-center gap-4">
+                                        <div class="text-center">
+                                            <div class="text-base md:text-lg font-bold text-slate-800" id="total-reactions-<?= $tema['id'] ?>">
+                                                <?= $total_reacciones_tema ?>
+                                            </div>
+                                            <div class="text-xs text-slate-500">Reacciones</div>
+                                        </div>
+                                        <div class="text-center">
+                                            <div class="text-base md:text-lg font-bold text-slate-800" id="comment-count-display-<?= $tema['id'] ?>">
+                                                <?= $total_respuestas_tema ?>
+                                            </div>
+                                            <div class="text-xs text-slate-500">Respuestas</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-4 md:mb-6">
+                        <h3 class="text-lg md:text-xl font-bold text-slate-800 mb-3">
+                            <?= htmlspecialchars($tema['titulo']) ?>
+                        </h3>
+                        <p class="text-slate-600 leading-relaxed text-sm md:text-base">
+                            <?= nl2br(htmlspecialchars($tema['contenido'])) ?>
+                        </p>
+                    </div>
+
+                    <div class="flex items-center justify-between tema-acciones-mobile border-t border-slate-100 pt-3 md:pt-4 gap-2">
+                        <div class="relative group">
+                            <button onclick="toggleReactionPopup(<?= $tema['id'] ?>)"
+                                class="flex items-center gap-1.5 md:gap-2 px-3 md:px-4 py-1.5 md:py-2 rounded-full bg-slate-50 hover:bg-slate-100 text-slate-700 transition-all reaction-btn-tema <?= $reaccion_usuario_tema ? 'reaction-' . $reaccion_usuario_tema : '' ?>"
+                                id="reaction-btn-<?= $tema['id'] ?>"
+                                data-reaction="<?= $reaccion_usuario_tema ?>">
+                                <span class="text-base md:text-lg" id="reaction-icon-<?= $tema['id'] ?>">
+                                    <i class="ph-heart"></i>
+                                </span>
+                                <span class="font-medium text-xs md:text-sm" id="reaction-label-<?= $tema['id'] ?>">
+                                    Reaccionar
+                                </span>
+                            </button>
+                            <div id="reactions-<?= $tema['id'] ?>" class="reaction-popup">
+                                <div class="reaction-item" onclick="addReactionTema(<?= $tema['id'] ?>, 'like')" title="Me gusta">👍</div>
+                                <div class="reaction-item" onclick="addReactionTema(<?= $tema['id'] ?>, 'love')" title="Me encanta">❤️</div>
+                                <div class="reaction-item" onclick="addReactionTema(<?= $tema['id'] ?>, 'haha')" title="Me divierte">😂</div>
+                                <div class="reaction-item" onclick="addReactionTema(<?= $tema['id'] ?>, 'wow')" title="Me asombra">😮</div>
+                                <div class="reaction-item" onclick="addReactionTema(<?= $tema['id'] ?>, 'sad')" title="Me entristece">😢</div>
+                                <div class="reaction-item" onclick="addReactionTema(<?= $tema['id'] ?>, 'angry')" title="Me enoja">😡</div>
+                            </div>
+                        </div>
+                        <button onclick="toggleCommentField(<?= $tema['id'] ?>)"
+                            class="flex items-center gap-1.5 md:gap-2 px-3 md:px-4 py-1.5 md:py-2 rounded-full bg-blue-50 hover:bg-blue-100 text-blue-700 transition-all text-xs md:text-sm">
+                            <i class="ph-chat-circle text-base"></i>
+                            <span>Responder</span>
+                        </button>
+
+                        <button onclick="compartirTema(<?= $tema['id'] ?>)"
+                            class="flex items-center gap-1.5 md:gap-2 px-3 md:px-4 py-1.5 md:py-2 rounded-full bg-slate-50 hover:bg-slate-100 text-slate-700 transition-all text-xs md:text-sm">
+                            <i class="ph-share-network text-base"></i>
+                            <span>Compartir</span>
+                        </button>
+                    </div>
+                    <?php if ($total_respuestas_tema > 0):
+                        // Cargar TOP 3 respuestas
+                        $stmt_resp = $pdo->prepare("
+                            SELECT r.*, 
+                                   COALESCE(u.username, r.anonimo_nombre) as autor,
+                                   u.avatar_url,
+                                   parent. id as cita_id,
+                                   COALESCE(u_parent.username, parent.anonimo_nombre) as cita_autor,
+                                   parent.contenido as cita_contenido
+                            FROM bioforo_respuestas r
+                            LEFT JOIN usuarios u ON u.id = r.usuario_id
+                            LEFT JOIN bioforo_respuestas parent ON parent.id = r.respuesta_a_id
+                            LEFT JOIN usuarios u_parent ON u_parent.id = parent.usuario_id
+                            WHERE r. tema_id = ? AND r.estado = 'activo'
+                            ORDER BY r.likes_count DESC, r.creado_en DESC
+                            LIMIT 3
+                        ");
+                        $stmt_resp->execute([$tema['id']]);
+                        $top_respuestas = $stmt_resp->fetchAll(PDO::FETCH_ASSOC);
+                    ?>
+                        <div id="respuestas-container-<?= $tema['id'] ?>" class="mt-4 md:mt-6 pt-4 md:pt-6 border-t border-slate-100">
+                            <h4 class="text-base md:text-lg font-semibold text-slate-800 mb-2 md:mb-3 flex items-center gap-2">
+                                <i class="ph-chats-circle text-emerald-600"></i>
+                                Respuestas TOP 3
+                            </h4>
+
+                            <div class="respuesta-minivista space-y-2 md:space-y-3 mb-2 md:mb-3" id="respuestas-list-<?= $tema['id'] ?>">
+                                <?php foreach ($top_respuestas as $r):
+                                    $reaccion_usuario_respuesta = obtenerReaccionUsuario($pdo, null, $r['id'], $usuario_id, $anonimo_id);
+                                    $reacciones_respuesta_data = obtenerConteosReaccionesRespuesta($pdo, $r['id']);
+                                    $like_class = $reaccion_usuario_respuesta === 'like' ? 'active-like' : '';
+                                    $angry_class = $reaccion_usuario_respuesta === 'angry' ? 'active-angry' : '';
+                                    $like_icon = $reaccion_usuario_respuesta === 'like' ?  'ph-thumbs-up-fill' : 'ph-thumbs-up';
+                                    $angry_icon = $reaccion_usuario_respuesta === 'angry' ? 'ph-thumbs-down-fill' : 'ph-thumbs-down';
+                                ?>
+                                    <div class="bg-slate-50 rounded-lg p-2 md:p-3 border border-slate-200 respuesta-item top3-message" id="respuesta-<?= $r['id'] ?>">
+                                        <div class="flex items-start gap-2">
+                                            <div class="w-5 h-5 md:w-6 md:h-6 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 text-xs font-bold flex-shrink-0 mt-0.5">
+                                                <?= strtoupper(substr($r['autor'], 0, 1)) ?>
+                                            </div>
+                                            <div class="flex-1 min-w-0">
+                                                <div class="flex flex-col md:flex-row md:items-center justify-between mb-1 gap-1 md:gap-0">
+                                                    <span class="font-medium text-slate-800 text-xs md:text-sm truncate"><?= htmlspecialchars($r['autor']) ?></span>
+                                                    <span class="text-xs text-slate-500"><?= date('d M H:i', strtotime($r['creado_en'])) ?></span>
+                                                </div>
+                                                <?php if (! empty($r['cita_contenido'])): ?>
+                                                    <div class="quote-box-whatsapp mb-2">
+                                                        <div class="quote-author-whatsapp"><?= htmlspecialchars($r['cita_autor']) ?></div>
+                                                        <div class="quote-text-whatsapp"><?= nl2br(htmlspecialchars(mb_substr($r['cita_contenido'], 0, 150))) ?></div>
+                                                    </div>
+                                                <?php endif; ?>
+                                                <p class="text-slate-600 text-xs md:text-sm mb-2"><?= nl2br(htmlspecialchars($r['contenido'])) ?></p>
+                                                <div class="flex items-center gap-2 md:gap-3">
+                                                    <button onclick="toggleReactionRespuesta(<?= $r['id'] ?>, 'like')"
+                                                        class="flex items-center gap-1 text-xs text-slate-500 hover:text-blue-600 transition-colors <?= $like_class ?>"
+                                                        id="like-btn-<?= $r['id'] ?>">
+                                                        <i class="<?= $like_icon ?>"></i>
+                                                        <span class="resp-likes-<?= $r['id'] ?>"><?= $reacciones_respuesta_data['likes_count'] ??  0 ?></span>
+                                                    </button>
+                                                    <button onclick="toggleReactionRespuesta(<?= $r['id'] ?>, 'angry')"
+                                                        class="flex items-center gap-1 text-xs text-slate-500 hover:text-red-600 transition-colors <?= $angry_class ?>"
+                                                        id="angry-btn-<?= $r['id'] ?>">
+                                                        <i class="<?= $angry_icon ?>"></i>
+                                                        <span class="resp-angry-<?= $r['id'] ?>"><?= $reacciones_respuesta_data['angry_count'] ?? 0 ?></span>
+                                                    </button>
+                                                    <button onclick="citarRespuesta(<?= $tema['id'] ?>, <?= $r['id'] ?>, '<?= htmlspecialchars($r['autor'], ENT_QUOTES) ?>', '<?= htmlspecialchars(str_replace(["\r", "\n"], ' ', $r['contenido']), ENT_QUOTES) ?>')"
+                                                        class="text-xs text-slate-500 hover:text-emerald-600 transition-colors">
+                                                        Responder
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+                            <?php if ($total_respuestas_tema > 3): ?>
+                                <div class="text-center mt-2 md:mt-3">
+                                    <button onclick="verMasRespuestas(<?= $tema['id'] ?>)"
+                                        id="ver-mas-btn-<?= $tema['id'] ?>"
+                                        class="text-xs md:text-sm text-emerald-600 hover:text-emerald-700 font-medium py-1 md:py-2 px-3 md:px-4 rounded-full border border-emerald-200 hover:bg-emerald-50 transition-all">
+                                        Ver <?= $total_respuestas_tema - 3 ?> respuestas más
+                                    </button>
+                                    <button onclick="verMenosRespuestas(<?= $tema['id'] ?>)"
+                                        id="ver-menos-btn-<?= $tema['id'] ?>"
+                                        class="hidden text-xs md:text-sm text-emerald-600 hover: text-emerald-700 font-medium py-1 md: py-2 px-3 md:px-4 rounded-full border border-emerald-200 hover:bg-emerald-50 transition-all">
+                                        Ver menos
+                                    </button>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                    <?php endif; ?>
+
+                    <!-- Formulario de respuesta -->
+                    <div id="reply-form-<?= $tema['id'] ?>" class="hidden mt-4 md:mt-6 pt-4 md:pt-6 border-t border-slate-200">
+                        <div id="quote-container-<?= $tema['id'] ?>"></div>
+                        <form id="form-respuesta-<?= $tema['id'] ?>" onsubmit="return submitComment(<?= $tema['id'] ?>)">
+                            <input type="hidden" id="cita-id-<?= $tema['id'] ?>" name="cita_id" value="">
+                            <div class="mb-3 md:mb-4">
+                                <textarea id="respuesta-input-<?= $tema['id'] ?>"
+                                    name="contenido"
+                                    placeholder="Escribe tu respuesta aquí..."
+                                    rows="2"
+                                    class="w-full px-3 md:px-4 py-2 rounded-lg border border-slate-300 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-200 outline-none transition-all text-xs md:text-sm"></textarea>
+                            </div>
+                            <div class="flex justify-end gap-2">
+                                <button type="button"
+                                    onclick="cerrarFormularioRespuesta(<?= $tema['id'] ?>)"
+                                    class="px-2 md:px-3 py-1 md:py-1.5 rounded-lg border border-slate-300 text-slate-600 hover:bg-slate-50 transition-colors text-xs md:text-sm">
+                                    Cancelar
+                                </button>
+                                <button type="submit"
+                                    id="submit-btn-<?= $tema['id'] ?>"
+                                    class="px-3 md:px-4 py-1 md:py-1.5 bg-emerald-500 hover: bg-emerald-600 text-white rounded-lg font-medium transition-colors flex items-center gap-1 text-xs md: text-sm">
+                                    <i class="ph-paper-plane-right"></i>
+                                    <span id="submit-text-<?= $tema['id'] ?>">Publicar</span>
+                                    <span id="submit-loading-<?= $tema['id'] ?>" class="hidden">
+                                        <span class="loader-small"></span>
+                                    </span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+<?php endforeach;
+            $html = ob_get_clean();
+
+            echo json_encode([
+                'success' => true,
+                'html' => $html,
+                'count' => count($nuevos_temas)
+            ]);
+        } catch (Exception $e) {
+            error_log("Error cargar_mas_temas: " . $e->getMessage());
+            echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+        }
+        exit;
+    }
+}
+
+// ==========================================
+// CARGAR DATOS PARA LA PÁGINA
+// ==========================================
+
+$categorias = $pdo->query("
+    SELECT * FROM bioforo_categorias
+    WHERE estado = 1
+    ORDER BY orden
+")->fetchAll(PDO::FETCH_ASSOC);
+
+$categoria_filtro = (int)($_GET['categoria'] ?? 0);
+$where_categoria = $categoria_filtro > 0 ? "AND t. categoria_id = $categoria_filtro" : "";
+
+// ORDENAMIENTO: Temas nuevos (menos de 2 horas) primero, luego por reacciones
 $temas = $pdo->query("
-    SELECT t.*, c.nombre AS cat_nombre,
-           COALESCE(u.nombre, t.anonimo_nombre) AS autor
+    SELECT t.*,
+           c.nombre AS cat_nombre,
+           COALESCE(u.username, t.anonimo_nombre) AS autor,
+           u.avatar_url,
+           TIMESTAMPDIFF(HOUR, t.creado_en, NOW()) as horas_desde_creacion
     FROM bioforo_temas t
     LEFT JOIN bioforo_categorias c ON c.id = t.categoria_id
-    LEFT JOIN usuarios u ON u.id = t.usuario_id
-    ORDER BY t.likes DESC, t.creado_en DESC
-    LIMIT 30
+    LEFT JOIN usuarios u ON u.id = t. usuario_id
+    WHERE t. estado = 'activo' $where_categoria
+    ORDER BY 
+        CASE 
+            WHEN TIMESTAMPDIFF(HOUR, t.creado_en, NOW()) < 2 THEN 0
+            ELSE 1
+        END ASC,
+        t.total_reacciones DESC,
+        t.creado_en DESC
+    LIMIT 10
 ")->fetchAll(PDO::FETCH_ASSOC);
-?>
+
+// Cargar reacciones de usuario para cada tema
+foreach ($temas as &$tema) {
+    $tema['user_reaction'] = obtenerReaccionUsuario($pdo, $tema['id'], null, $usuario_id, $anonimo_id);
+    $tema['reacciones'] = obtenerConteosReaccionesTema($pdo, $tema['id']);
+}
+unset($tema);
 
 
+$estadisticas = $pdo->query("
+    SELECT
+        COUNT(*) as total_temas,
+        COUNT(DISTINCT CASE WHEN usuario_id IS NOT NULL THEN usuario_id END) as usuarios_registrados
+    FROM bioforo_temas WHERE estado = 'activo'
+")->fetch(PDO::FETCH_ASSOC);
+
+$total_respuestas = $pdo->query("
+    SELECT COUNT(*) as total
+    FROM bioforo_respuestas
+    WHERE estado = 'activo'
+")->fetch(PDO::FETCH_ASSOC)['total'];
+
+$usuarios_en_linea = 0;
+$tema_hash = isset($_GET['tema']) ? '#tema-' . (int)$_GET['tema'] : '';
 
 
-
-
-  <?php if ($rol === 'admin'): ?>
-  <div style="margin:20px 0;">
-    <button class="btn btn-admin" onclick="document.getElementById('formCrearForo').style.display='block'">+ Crear nuevo foro</button>
-    <form id="formCrearForo" method="post" style="display:none; margin-top:12px;">
-      <input type="hidden" name="action" value="crear_foro">
-      <input type="text" name="nombre" placeholder="Nombre del nuevo foro" required style="padding:8px; width:300px;">
-      <button type="submit" class="btn">Crear</button>
-    </form>
-  </div>
-  <?php endif; ?>
-
-  <h2>Temas más votados</h2>
-
-  <?php if (empty($temas)): ?>
-    <p class="text-center text-gray-600 py-8">Aún no hay temas publicados. ¡Sé el primero en crear uno!</p>
-  <?php else: ?>
-    <?php foreach ($temas as $tema): ?>
-      <div class="tema principal">
-        <div class="titulo"><?= htmlspecialchars($tema['titulo']) ?></div>
-        <div class="meta">
-          <span class="rol-badge rol-<?= htmlspecialchars($tema['rol']) ?>">
-            <?= $tema['rol'] === 'admin' ? 'Admin' : ($tema['rol'] === 'especialista' ? 'Esp' : ($tema['rol'] === 'usuario' ? 'Usr' : 'Anónimo')) ?>
-          </span>
-           ·  <?= htmlspecialchars($tema['autor']) ?> 
-          · <?= date('d M Y H:i', strtotime($tema['creado_en'])) ?>
-          · <span class="likes">👍 <?= $tema['likes'] ?></span>
-        </div>
-        <div><?= nl2br(htmlspecialchars($tema['contenido'])) ?></div>
-
-        <!-- Respuestas -->
-        <?php
-        $res = $pdo->prepare("SELECT * FROM bioforo_respuestas WHERE tema_id = ? ORDER BY creado_en ASC");
-        $res->execute([$tema['id']]);
-        $respuestas = $res->fetchAll(PDO::FETCH_ASSOC);
-        if ($respuestas): ?>
-          <div class="respuestas">
-            <?php foreach ($respuestas as $r): ?>
-              <div class="tema" style="margin:12px 0; background:#f9fafb;">
-                <div class="meta">
-                  <span class="rol-badge rol-<?= htmlspecialchars($r['rol']) ?>">
-                    <?= $r['rol'] === 'admin' ? 'Admin' : ($r['rol'] === 'especialista' ? 'Esp' : ($r['rol'] === 'usuario' ? 'Usr' : 'Anónimo')) ?>
-                  </span>
-                   ·  <?= htmlspecialchars($r['anonimo_nombre'] ?? $r['autor'] ?? '—') ?> 
-                  · <?= date('d M H:i', strtotime($r['creado_en'])) ?>
-                  · <span class="likes">👍 <?= $r['likes'] ?></span>
-                </div>
-                <div><?= nl2br(htmlspecialchars($r['contenido'])) ?></div>
-              </div>
-            <?php endforeach; ?>
-          </div>
-        <?php endif; ?>
-
-        <!-- Form respuesta -->
-        <form method="post" class="form-simple">
-          <input type="hidden" name="action" value="responder">
-          <input type="hidden" name="tema_id" value="<?= $tema['id'] ?>">
-          <textarea name="contenido" placeholder="Escribe tu respuesta aquí..." maxlength="1500" required></textarea>
-          <button type="submit" class="btn">Responder</button>
-        </form>
-      </div>
-    <?php endforeach; ?>
-  <?php endif; ?>
-
-  <!-- Form nuevo tema -->
-  <h2>Crear nuevo tema</h2>
-  <form method="post" class="form-simple">
-    <input type="hidden" name="action" value="nuevo_tema">
-    <select name="categoria" required>
-      <option value="">— Selecciona categoría —</option>
-      <?php foreach ($categorias as $c): ?>
-        <option value="<?= $c['id'] ?>"><?= htmlspecialchars($c['nombre']) ?></option>
-      <?php endforeach; ?>
-    </select>
-    <input type="text" name="titulo" placeholder="Título (máx 120 caracteres)" maxlength="120" required>
-    <textarea name="contenido" placeholder="Descripción inicial (máx 400 caracteres)" maxlength="400" required></textarea>
-    <button type="submit" class="btn">Publicar tema</button>
-  </form>
-</div>
-
-<?php include 'footer.php'; ?>
-
-</body>
-</html>
+require_once __DIR__ . '/Bioforo_vista.php';

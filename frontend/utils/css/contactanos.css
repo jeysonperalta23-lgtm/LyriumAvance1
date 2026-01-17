@@ -11,7 +11,7 @@
 body,
 body.bg-gray-50 {
 
-    background: #F8F9FA !important;
+    background: #F1F3F4 !important;
 }
 
 .contact-container {
@@ -130,6 +130,33 @@ body.bg-gray-50 {
     color: white;
     font-size: 0.875rem;
     font-weight: 600;
+}
+
+/* flor de loto*/
+.visual-lotus-icon {
+    position: absolute;
+    bottom: -60px;
+    right: -60px;
+    opacity: 0.12;
+    transform: rotate(15deg);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.visual-lotus-icon i {
+    font-size: 320px;
+    color: white;
+}
+
+@media (max-width: 767px) {
+    .visual-lotus-icon {
+        bottom: -30px;
+        right: -30px;
+    }
+
+    .visual-lotus-icon i {
+        font-size: 180px;
+    }
 }
 
 /* Form Section */

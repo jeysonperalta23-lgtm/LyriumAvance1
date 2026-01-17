@@ -7,6 +7,11 @@
   --font-small: 0.75rem;
 }
 
+html,
+body {
+  font-family: 'Outfit', sans-serif;
+}
+
 .user-card-hover {
   transform: scale(var(--card-scale));
   padding: var(--card-padding) !important;
@@ -233,23 +238,23 @@
   border-radius: 30px;
   overflow: hidden;
   box-shadow: 0 18px 45px rgba(15, 23, 42, .25);
-  min-height: 360px;
+  min-height: 480px;
+  display: flex;
+  align-items: center;
 }
 
 .ofertas-bg {
   position: absolute;
-  top: 10%;
+  top: -20%;
   left: 0;
   width: 100%;
-  height:  100%;
+  height: 140%;
   z-index: 0;
-  background-size: cover !important;
-  background-repeat: no-repeat !important;
-  background-position: center top !important; 
-  will-change: transform, opacity;
-  transform: translate3d(0, 0, 0) scale(1.3); 
-  transition: opacity 1.2s ease-in-out;
-  
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center top;
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
 }
 
 .ofertas-bg-productos {
@@ -267,18 +272,36 @@
 .ofertas-inner {
   position: relative;
   z-index: 1;
-  padding: 2.5rem 1.5rem;
+  padding: 1.5rem 1rem;
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
 }
 
 @media (min-width: 768px) {
   .ofertas-inner {
-    padding: 2.5rem 2.5rem;
+    padding: 2rem 5rem;
+  }
+}
+
+.ofertas-viewport {
+  max-width: 460px;
+  /* 2 cards (220px each) + 20px gap */
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+@media (max-width: 767px) {
+  .ofertas-viewport {
+    max-width: 190px;
+    /* 1 card in mobile */
   }
 }
 
 .ofertas-track {
   display: flex;
-  transition: transform .7s ease;
+  transition: transform .6s cubic-bezier(0.22, 0.61, 0.36, 1);
   will-change: transform;
 }
 
@@ -296,13 +319,12 @@
 }
 
 .oferta-card {
-  background: #f0f9ff;
-  /* Azul cielo muy tenue para contraste */
-  border: 1px solid #e0f2fe;
-  /* Borde sutil */
-  border-radius: 22px;
-  padding: 14px;
-  width: 280px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 20px;
+  padding: 12px;
+  width: 220px;
   box-shadow: 0 10px 25px rgba(15, 23, 42, .08);
   display: flex;
   flex-direction: column;
@@ -316,9 +338,8 @@
 
 @media (max-width: 767px) {
   .oferta-card {
-    width: 260px;
-    /* Un poco más angosto en móvil para mostrar adelanto de la siguiente card */
-    margin-right: 16px;
+    width: 190px;
+    margin-right: 14px;
   }
 }
 
@@ -471,7 +492,7 @@
 
 .banner-grid-top {
   display: grid;
-  grid-template-columns: minmax(0, 2.1fr) minmax(0, 1.1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 1rem;
 }
 
@@ -506,6 +527,8 @@
   box-shadow: 0 10px 25px rgba(15, 23, 42, .18);
   cursor: pointer;
   position: relative;
+  user-select: none;
+  -webkit-user-drag: none;
 }
 
 .banner-card img {
@@ -515,6 +538,8 @@
   display: block;
   transition: transform .45s cubic-bezier(.22, .61, .36, 1),
     box-shadow .45s cubic-bezier(.22, .61, .36, 1);
+  user-select: none;
+  -webkit-user-drag: none;
 }
 
 .banner-card:hover img {
@@ -616,6 +641,48 @@
   height: 120px;
   object-fit: contain;
   margin: 0 auto 8px;
+}
+
+.cat-item-banner {
+  flex: 0 0 auto;
+  width: 380px;
+  /* Ancho ajustado para banners pequeños */
+  background: #fff;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, .12);
+  margin-right: 1.5rem;
+  cursor: grab;
+  transition: transform 0.3s ease;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.cat-item-banner:active {
+  cursor: grabbing;
+}
+
+.cat-item-banner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  user-select: none;
+  -webkit-user-drag: none;
+  pointer-events: none;
+}
+
+@media (max-width: 1023px) {
+  .cat-item-banner {
+    width: 280px;
+  }
+}
+
+@media (max-width: 639px) {
+  .cat-item-banner {
+    width: 90vw;
+    /* Casi todo el ancho en móvil */
+  }
 }
 
 .cat-title {
@@ -1211,6 +1278,7 @@ header nav button:hover {
   /* opción A: 2 líneas máximo (recomendado) */
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 

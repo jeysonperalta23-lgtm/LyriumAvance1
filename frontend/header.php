@@ -9,6 +9,11 @@
   <!-- TailwindCSS -->
   <script src="https://cdn.tailwindcss.com"></script>
 
+  <!-- Google Fonts: Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet">
+
   <!-- Iconos Phosphor -->
   <script src="https://unpkg.com/phosphor-icons"></script>
 
@@ -22,6 +27,7 @@
   <link href="utils/css/live-search.css?v=<?php echo time(); ?>" rel="stylesheet" />
   <link href="utils/css/ui-components.css?v=<?php echo time(); ?>" rel="stylesheet" />
   <link href="utils/css/index-dark-mode.css?v=<?php echo time(); ?>" rel="stylesheet" />
+  <link href="utils/css/contactanos.css?v=<?php echo time(); ?>" rel="stylesheet" />
   <link rel="icon" type="image/png" href="img/logo.png?v=<?php echo time(); ?>" />
 
   <!-- Scripts de Filtrado y Teclado -->

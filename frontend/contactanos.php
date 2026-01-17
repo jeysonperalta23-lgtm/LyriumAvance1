@@ -1,5 +1,4 @@
 <?php include 'header.php'; ?>
-<link href="utils/css/contactanos.css?v=<?php echo time(); ?>" rel="stylesheet">
 
 <div class="contact-page-wrapper">
     <div class="contact-container">
@@ -28,6 +27,9 @@
                             <span>+51 937 093 420</span>
                         </div>
                     </div>
+                </div>
+                <div class="visual-lotus-icon">
+                    <i class="ph ph-flower-lotus"></i>
                 </div>
             </div>
 
@@ -85,5 +87,5 @@
     </div>
 </div>
 
-<script src="utils/js/contactanos.js?v=<?php echo time(); ?>"></script>
+
 <?php include 'footer.php'; ?>

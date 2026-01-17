@@ -126,6 +126,7 @@
 <!-- JS -->
 <script src="js/buscar.js?v=<?php echo time(); ?>"></script>
 <script src="js/index.js?v=<?php echo time(); ?>"></script>
+<script src="js/contactanos.js?v=<?php echo time(); ?>"></script>
 </body>
 
 </html>

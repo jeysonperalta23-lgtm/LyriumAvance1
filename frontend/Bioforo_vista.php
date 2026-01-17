@@ -7,11 +7,12 @@
     <title>BioForo - Lyrium</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <link rel="stylesheet" href="utils/css/bioforo.css?v=<?php echo time(); ?>">
 </head>
 
-<body class="bg-slate-50 min-h-screen">
+<body class="bg-slate-50 min-h-screen font-['Inter']">
 
     <?php if (file_exists('header.php')) include 'header.php'; ?>
 

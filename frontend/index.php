@@ -16,147 +16,192 @@ include 'header.php';
 ?>
 
 <!-- BUSCADOR HEADER -->
-<div class="border-t border-gray-100 bg-white">
+<!-- BUSCADOR LYRIUM DESIGN (DROPDOWN MODIFIED) -->
+<div class="border-t border-gray-100 bg-white z-10 shadow-sm">
   <div class="max-w-7xl mx-auto px-4 py-4">
-    <form action="buscar.php" method="GET" class="w-full" id="searchForm">
+    <form action="buscar.php" method="GET" class="w-full relative" id="searchForm">
       <input type="hidden" name="category" id="filterCategory" value="">
-      <input type="hidden" name="price" id="filterMaxPrice" value="2000">
+      <input type="hidden" name="max_price" id="filterMaxPrice" value="2000">
+
       <div class="relative w-full">
-        <input type="text" name="q" id="searchInput" placeholder="¿Qué buscas?" class="w-full h-12 md:h-14 pl-4 pr-36 md:pl-6 md:pr-52 rounded-full border border-gray-200 text-xs sm:text-sm md:text-base
-                   focus:outline-none focus:ring-2 focus:ring-sky-400 focus:border-sky-400" />
+        <!-- Input Principal -->
+        <input type="text" name="q" id="searchInput" placeholder="¿Qué buscas para tu salud?"
+          class="w-full h-12 md:h-14 pl-4 pr-36 md:pl-6 md:pr-56 rounded-full border border-gray-200 text-xs sm:text-sm md:text-base focus:outline-none focus:ring-2 focus:ring-sky-400 focus:border-sky-400 transition-all shadow-inner bg-white"
+          autocomplete="off" />
+
+        <!-- Botones de Acción -->
         <div class="absolute right-1 top-1 bottom-1 flex items-center gap-1 md:gap-2">
-          <button type="button" id="voiceBtn" class="h-full w-10 md:w-14 rounded-full bg-sky-500 hover:bg-sky-600 
-                  text-white font-semibold flex items-center justify-center
-                  transition-all duration-200" aria-label="Buscar por voz" title="Buscar con tu voz">
+          <button type="button" id="voiceBtn"
+            class="h-full w-10 md:w-14 rounded-full bg-sky-500 hover:bg-sky-600 text-white font-semibold flex items-center justify-center transition-all duration-200"
+            title="Buscar por voz">
             <i class="ph-microphone text-lg md:text-xl"></i>
           </button>
 
-
-          <button type="button" id="btnFiltros" class="flex h-full w-10 md:w-auto md:px-7 rounded-full bg-sky-500 hover:bg-sky-600
-                     text-white font-semibold items-center justify-center gap-2" aria-label="Filtros">
+          <button type="button" id="btnFiltros"
+            class="flex h-full w-10 md:w-auto md:px-7 rounded-full bg-sky-500 text-white hover:bg-sky-600 font-bold items-center justify-center gap-2 transition-all border border-sky-200">
             <i class="ph-funnel text-xl"></i>
             <span class="hidden md:inline">Filtros</span>
           </button>
 
-          <button type="submit" class="h-full w-10 md:w-auto md:px-7 rounded-full bg-sky-500 
-                     text-white font-semibold flex items-center justify-center gap-2" aria-label="Buscar">
+          <button type="submit"
+            class="h-full w-10 md:w-auto md:px-7 rounded-full  bg-sky-500 text-white hover:bg-sky-600 font-bold flex items-center justify-center gap-2 transition-all shadow-md">
             <i class="ph-magnifying-glass text-lg md:text-xl"></i>
             <span class="hidden md:inline">Buscar</span>
           </button>
         </div>
+      </div>
 
-        <!-- DROPDOWN DE FILTROS -->
-        <div id="filterDropdown"
-          class="absolute top-100 left-0 right-0 mt-4 bg-white/85 backdrop-blur-xl border border-white/30 rounded-[2rem] shadow-2xl p-8 z-[100] opacity-0 translate-y-[-10px] pointer-events-none transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] [&.active]:opacity-100 [&.active]:translate-y-0 [&.active]:pointer-events-auto">
-          <div class="max-w-4xl mx-auto">
-            <!-- 4 Indicadores -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-              <div
-                class="js-indicator-item bg-white p-3 rounded-2xl text-center text-[0.75rem] font-semibold text-gray-600 shadow-sm border border-gray-100 flex flex-col items-center gap-1 transition-colors [&.active]:bg-sky-50 [&.active]:border-sky-300 [&.active]:text-sky-700"
-                data-indicator="buscador">
-                <i class="ph-magnifying-glass text-xl text-sky-400"></i>
-                <span class="indicator-val">Buscador Básico</span>
+      <!-- DROPDOWN DE FILTROS (DISEÑO PREMIUM) -->
+      <div id="filterDropdown"
+        class="absolute top-[calc(100%+1rem)] left-0 right-0 bg-white/95 backdrop-blur-2xl border border-gray-200 rounded-[2.5rem] shadow-[0_30px_70px_rgba(0,0,0,0.15)] p-0 z-[100] opacity-0 translate-y-[-20px] pointer-events-none transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] [&.active]:opacity-100 [&.active]:translate-y-0 [&.active]:pointer-events-auto overflow-hidden">
+
+        <!-- Indicadores de estado actual -->
+        <div class="bg-gray-50/80 px-8 py-5 border-b border-gray-100">
+          <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+            <div
+              class="js-indicator-item bg-white p-2.5 rounded-2xl text-center text-[10px] font-bold text-gray-500 shadow-sm border border-gray-100 flex flex-col items-center gap-1 transition-all [&.active]:bg-sky-50 [&.active]:border-sky-300 [&.active]:text-sky-700"
+              data-indicator="buscador">
+              <i class="ph-magnifying-glass text-lg text-sky-400"></i>
+              <span class="indicator-val">Buscador</span>
+            </div>
+            <div
+              class="js-indicator-item bg-white p-2.5 rounded-xl text-center text-[10px] font-bold text-gray-500 shadow-sm border border-gray-100 flex flex-col items-center gap-1 transition-all [&.active]:bg-sky-50 [&.active]:border-sky-300 [&.active]:text-sky-700"
+              data-indicator="teclado">
+              <i class="ph-keyboard text-lg text-sky-400"></i>
+              <span class="indicator-val">Teclado: OFF</span>
+            </div>
+            <div
+              class="js-indicator-item bg-white p-2.5 rounded-xl text-center text-[10px] font-bold text-gray-500 shadow-sm border border-gray-100 flex flex-col items-center gap-1 transition-all [&.active]:bg-sky-50 [&.active]:border-sky-300 [&.active]:text-sky-700"
+              data-indicator="precio">
+              <i class="ph-currency-circle-dollar text-lg text-sky-400"></i>
+              <span class="indicator-val">Precio</span>
+            </div>
+            <div
+              class="js-indicator-item bg-white p-2.5 rounded-xl text-center text-[10px] font-bold text-gray-500 shadow-sm border border-gray-100 flex flex-col items-center gap-1 transition-all [&.active]:bg-sky-50 [&.active]:border-sky-300 [&.active]:text-sky-700"
+              data-indicator="categoria">
+              <i class="ph-tag text-lg text-sky-400"></i>
+              <span class="indicator-val">Categoría</span>
+            </div>
+            <div
+              class="js-indicator-item bg-white p-2.5 rounded-xl text-center text-[10px] font-bold text-gray-500 shadow-sm border border-gray-100 flex flex-col items-center gap-1 transition-all [&.active]:bg-sky-50 [&.active]:border-sky-300 [&.active]:text-sky-700"
+              data-indicator="oferta">
+              <i class="ph-sparkle text-lg text-sky-400"></i>
+              <span class="indicator-val">Ofertas</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-8">
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+            <!-- Herramientas -->
+            <div class="filter-card p-5 bg-gray-50/50">
+              <p class="text-[11px] uppercase tracking-wider text-muted font-black inline-flex items-center gap-2 mb-4">
+                <i class="ph-gear-six icon-brand text-lg"></i> Utilidades
+              </p>
+              <div class="flex items-center justify-between p-4 bg-white rounded-2xl border border-gray-100 shadow-sm">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-xl bg-sky-100 flex items-center justify-center text-sky-600 shadow-sm">
+                    <i class="ph-keyboard-bold text-xl"></i>
+                  </div>
+                  <div>
+                    <p class="text-xs font-bold text-gray-800">Teclado Digital</p>
+                    <p class="text-[10px] text-gray-400 italic">Escribe sin teclado físico</p>
+                  </div>
+                </div>
+                <label class="relative inline-block w-11 h-6 cursor-pointer">
+                  <input type="checkbox" id="keyboardToggle" class="sr-only peer">
+                  <span
+                    class="absolute inset-0 bg-gray-200 rounded-full transition-colors peer-checked:bg-sky-500"></span>
+                  <span
+                    class="absolute left-1 bottom-1 bg-white w-4 h-4 rounded-full transition-transform peer-checked:translate-x-5 shadow-sm"></span>
+                </label>
               </div>
-              <div
-                class="js-indicator-item bg-white p-3 rounded-2xl text-center text-[0.75rem] font-semibold text-gray-600 shadow-sm border border-gray-100 flex flex-col items-center gap-1 transition-colors [&.active]:bg-sky-50 [&.active]:border-sky-300 [&.active]:text-sky-700"
-                data-indicator="teclado">
-                <i class="ph-keyboard text-xl text-sky-400"></i>
-                <span class="indicator-val">Teclado: OFF</span>
+              <p class="mt-4 text-[10px] text-gray-400 leading-relaxed px-1">
+                Activa el teclado digital si estás usando una pantalla táctil o no tienes un teclado disponible.
+              </p>
+            </div>
+
+            <!-- Categorías -->
+            <div class="filter-card p-5 bg-gray-50/50">
+              <p class="text-[11px] uppercase tracking-wider text-muted font-black inline-flex items-center gap-2 mb-4">
+                <i class="ph-tag icon-brand text-lg text-sky-500"></i> Categorías
+              </p>
+              <div class="flex flex-wrap gap-2 max-h-[120px] overflow-y-auto pr-2 custom-scrollbar">
+                <?php if (!empty($categoriasReales)): ?>
+                  <?php foreach ($categoriasReales as $cat): ?>
+                    <button type="button"
+                      class="filter-item-chip px-3.5 py-2.5 rounded-full bg-white border border-gray-100 text-[11px] font-bold text-gray-600 hover:border-sky-300 hover:bg-sky-50 transition-all [&.active]:bg-sky-500 [&.active]:text-white [&.active]:border-sky-500 [&.active]:shadow-md"
+                      data-type="categoria" data-id="<?= $cat['id'] ?>">
+                      <?= htmlspecialchars($cat['nombre']) ?>
+                    </button>
+                  <?php endforeach; ?>
+                <?php endif; ?>
               </div>
-              <div
-                class="js-indicator-item bg-white p-3 rounded-2xl text-center text-[0.75rem] font-semibold text-gray-600 shadow-sm border border-gray-100 flex flex-col items-center gap-1 transition-colors [&.active]:bg-sky-50 [&.active]:border-sky-300 [&.active]:text-sky-700"
-                data-indicator="precio">
-                <i class="ph-currency-circle-dollar text-xl text-sky-400"></i>
-                <span class="indicator-val">Cualquier Precio</span>
-              </div>
-              <div
-                class="js-indicator-item bg-white p-3 rounded-2xl text-center text-[0.75rem] font-semibold text-gray-600 shadow-sm border border-gray-100 flex flex-col items-center gap-1 transition-colors [&.active]:bg-sky-50 [&.active]:border-sky-300 [&.active]:text-sky-700"
-                data-indicator="categoria">
-                <i class="ph-tag text-xl text-sky-400"></i>
-                <span class="indicator-val">Categoría: Todas</span>
+
+              <!-- Ofertas y Promociones -->
+              <p
+                class="text-[11px] uppercase tracking-wider text-muted font-black inline-flex items-center gap-2 mt-6 mb-4">
+                <i class="ph-sparkle icon-brand text-lg text-sky-500"></i> Ofertas Especiales
+              </p>
+              <div class="flex flex-wrap gap-2">
+                <button type="button"
+                  class="filter-item-chip px-3.5 py-2.5 rounded-full bg-white border border-gray-100 text-[11px] font-bold text-sky-600 hover:border-sky-300 hover:bg-sky-50 transition-all [&.active]:bg-sky-500 [&.active]:text-white [&.active]:border-sky-500 [&.active]:shadow-md"
+                  data-type="oferta" data-id="descuento">
+                  Descuentos
+                </button>
+                <button type="button"
+                  class="filter-item-chip px-3.5 py-2.5 rounded-full bg-white border border-gray-100 text-[11px] font-bold text-sky-600 hover:border-sky-300 hover:bg-sky-50 transition-all [&.active]:bg-sky-500 [&.active]:text-white [&.active]:border-sky-500 [&.active]:shadow-md"
+                  data-type="oferta" data-id="promocion">
+                  Promociones
+                </button>
+                <button type="button"
+                  class="filter-item-chip px-3.5 py-2.5 rounded-full bg-white border border-gray-100 text-[11px] font-bold text-sky-600 hover:border-sky-300 hover:bg-sky-50 transition-all [&.active]:bg-sky-500 [&.active]:text-white [&.active]:border-sky-500 [&.active]:shadow-md"
+                  data-type="oferta" data-id="oferta">
+                  Ofertas
+                </button>
               </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
-              <!-- Columna Izquierda: Teclado y Precio -->
-              <div class="space-y-8">
-                <div class="flex items-center justify-between p-4 bg-white rounded-2xl shadow-sm border border-gray-50">
-                  <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-full bg-lime-100 flex items-center justify-center text-lime-600">
-                      <i class="ph-keyboard text-xl"></i>
-                    </div>
-                    <div>
-                      <p class="font-bold text-gray-800">Teclado Digital</p>
-                      <p class="text-xs text-gray-500">Habilitar escritura en pantalla</p>
-                    </div>
-                  </div>
-                  <label class="relative inline-block w-12 h-6 cursor-pointer">
-                    <input type="checkbox" id="keyboardToggle" class="sr-only peer">
-                    <span
-                      class="absolute inset-0 bg-gray-300 rounded-full transition-colors peer-checked:bg-lime-500"></span>
-                    <span
-                      class="absolute left-1 bottom-1 bg-white w-4 h-4 rounded-full transition-transform peer-checked:translate-x-6"></span>
-                  </label>
+            <!-- Precio -->
+            <div class="filter-card p-5 bg-gray-50/50 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between mb-5 px-1">
+                  <p class="text-[11px] uppercase tracking-wider text-muted font-black inline-flex items-center gap-2">
+                    <i class="ph-currency-circle-dollar icon-brand text-lg"></i> Rango de Precio
+                  </p>
+                  <button id="btnPriceReset" type="button"
+                    class="text-[10px] px-3 py-1.5 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-600 font-bold inline-flex items-center gap-1 transition-all">
+                    <i class="ph-arrow-counter-clockwise"></i> Reset
+                  </button>
                 </div>
 
-                <div class="price-slider-container">
-                  <div class="flex justify-between items-center mb-2">
-                    <p class="font-bold text-gray-800">Rango de Precio</p>
-                    <span id="priceValue" class="text-sky-600 font-bold bg-sky-50 px-3 py-1 rounded-full text-sm">S/
-                      1000</span>
+                <div class="range-wrap px-2">
+                  <div class="range-row mb-4">
+                    <span class="range-pill"><i class="ph-minus text-sky-500"></i> Min: <b id="lblPriceMin">S/
+                        0</b></span>
+                    <span class="range-pill"><i class="ph-plus text-sky-500"></i> Max: <b id="lblPriceMax">S/
+                        2000</b></span>
                   </div>
-                  <input type="range" id="priceRange" min="0" max="2000" value="1000" class="range-slider">
-                  <div class="flex justify-between text-[10px] text-gray-400 font-bold uppercase tracking-wider">
-                    <span>S/ 0</span>
-                    <span>S/ 2000+</span>
+
+                  <div class="range-sliders">
+                    <div id="rangeFill" class="range-fill"></div>
+                    <input id="priceMin" type="range" min="0" max="2000" step="1" value="0">
+                    <input id="priceMax" type="range" min="0" max="2000" step="1" value="2000">
                   </div>
+
+                  <p class="mt-4 text-[10px] text-gray-400 italic flex items-center gap-2">
+                    <i class="ph-mouse"></i> Arrastra para filtrar (en tiempo real)
+                  </p>
                 </div>
               </div>
 
-              <!-- Columna Derecha: Categorías y Marcas -->
-              <div class="space-y-6">
-                <div>
-                  <p class="font-bold text-gray-800 mb-3 ml-1">Categorías Populares</p>
-                  <div class="flex flex-wrap gap-2">
-                    <button type="button"
-                      class="filter-item-chip px-4 py-2 rounded-full bg-white border border-gray-100 text-sm text-gray-600 hover:border-sky-300 transition-all font-medium duration-200 [&.active]:bg-sky-500 [&.active]:text-white [&.active]:border-sky-500"
-                      data-type="categoria">Salud</button>
-                    <button type="button"
-                      class="filter-item-chip px-4 py-2 rounded-full bg-white border border-gray-100 text-sm text-gray-600 hover:border-sky-300 transition-all font-medium duration-200 [&.active]:bg-sky-500 [&.active]:text-white [&.active]:border-sky-500"
-                      data-type="categoria">Belleza</button>
-                    <button type="button"
-                      class="filter-item-chip px-4 py-2 rounded-full bg-white border border-gray-100 text-sm text-gray-600 hover:border-sky-300 transition-all font-medium duration-200 [&.active]:bg-sky-500 [&.active]:text-white [&.active]:border-sky-500"
-                      data-type="categoria">Nutrición</button>
-                    <button type="button"
-                      class="filter-item-chip px-4 py-2 rounded-full bg-white border border-gray-100 text-sm text-gray-600 hover:border-sky-300 transition-all font-medium duration-200 [&.active]:bg-sky-500 [&.active]:text-white [&.active]:border-sky-500"
-                      data-type="categoria">Médico</button>
-                  </div>
-                </div>
-                <div>
-                  <p class="font-bold text-gray-800 mb-3 ml-1">Marcas destacadas</p>
-                  <div class="flex flex-wrap gap-2">
-                    <button type="button"
-                      class="filter-item-chip px-4 py-2 rounded-full bg-white border border-gray-100 text-sm text-gray-600 hover:border-sky-300 transition-all font-medium duration-200 [&.active]:bg-sky-500 [&.active]:text-white [&.active]:border-sky-500"
-                      data-type="marca">Barato (S/)</button>
-                    <button type="button"
-                      class="filter-item-chip px-4 py-2 rounded-full bg-white border border-gray-100 text-sm text-gray-600 hover:border-sky-300 transition-all font-medium duration-200 [&.active]:bg-sky-500 [&.active]:text-white [&.active]:border-sky-500"
-                      data-type="marca">Caro (S/$$)</button>
-                    <button type="button"
-                      class="filter-item-chip px-4 py-2 rounded-full bg-white border border-gray-100 text-sm text-gray-600 hover:border-sky-300 transition-all font-medium duration-200 [&.active]:bg-sky-500 [&.active]:text-white [&.active]:border-sky-500"
-                      data-type="marca">Natura</button>
-                    <button type="button"
-                      class="filter-item-chip px-4 py-2 rounded-full bg-white border border-gray-100 text-sm text-gray-600 hover:border-sky-300 transition-all font-medium duration-200 [&.active]:bg-sky-500 [&.active]:text-white [&.active]:border-sky-500"
-                      data-type="marca">Eucerin</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="mt-8 flex justify-end">
               <button type="button" id="applyFilters"
-                class="px-8 py-3 rounded-full bg-gray-900 text-white font-bold text-sm hover:scale-105 transition-transform duration-200">Aplicar
+                class="mt-8 w-full py-4 rounded-2xl bg-sky-500 hover:bg-sky-600 text-white text-[11px] font-black tracking-[0.15em] transition-all shadow-lg active:scale-[0.97] uppercase">
+                Aplicar Filtros
               </button>
             </div>
+
           </div>
         </div>
       </div>
@@ -164,9 +209,12 @@ include 'header.php';
   </div>
 </div>
 
-<!-- CONTENIDO -->
-<main class="flex-1 py-6 md:py-10 space-y-10 md:space-y-16">
 
+
+<!-- CONTENIDO -->
+<main class="flex-1 pb-6 md:pb-10 space-y-10 md:space-y-16">
+
+  <!-- FLOR SUPERIOR  -->
   <div
     class="hidden md:block w-full elementor-element elementor-element-eab7742 ajuste-banner-top e-con-full e-flex wpr-particle-no wpr-jarallax-no wpr-parallax-no wpr-sticky-section-no e-con e-child"
     data-id="eab7742" data-element_type="container"
@@ -189,39 +237,57 @@ include 'header.php';
     <div class="relative overflow-hidden">
       <div id="bannersTrack" class="flex transition-transform duration-700">
         <div class="min-w-full">
-          <img src="img/Inicio/1.png" alt="Banner publicitario 1"
-            class="w-full h-[240px] md:h-[420px] lg:h-[520px] object-cover cursor-pointer" data-modal="producto"
-            data-title="Campaña Especial 1" data-price="" data-desc="Promoción especial de temporada." />
+          <picture>
+            <source srcset="img/Inicio/movil/1.webp" media="(max-width: 767px)">
+            <img src="img/Inicio/1.png" alt="Banner publicitario 1"
+              class="w-full h-auto md:h-[420px] lg:h-[520px] object-cover cursor-pointer" data-modal="producto"
+              data-title="Campaña Especial 1" data-price="" data-desc="Promoción especial de temporada." />
+          </picture>
         </div>
 
         <div class="min-w-full">
-          <img src="img/Inicio/2.png" alt="Banner publicitario 2"
-            class="w-full h-[240px] md:h-[420px] lg:h-[520px] object-cover cursor-pointer" data-modal="producto"
-            data-title="Campaña Especial 2" data-price="" data-desc="Descubre nuestras ofertas exclusivas." />
+          <picture>
+            <source srcset="img/Inicio/movil/2.webp" media="(max-width: 767px)">
+            <img src="img/Inicio/2.png" alt="Banner publicitario 2"
+              class="w-full h-auto md:h-[420px] lg:h-[520px] object-cover cursor-pointer" data-modal="producto"
+              data-title="Campaña Especial 2" data-price="" data-desc="Descubre nuestras ofertas exclusivas." />
+          </picture>
         </div>
 
         <div class="min-w-full">
-          <img src="img/Inicio/3.png" alt="Banner publicitario 3"
-            class="w-full h-[240px] md:h-[420px] lg:h-[520px] object-cover cursor-pointer" data-modal="producto"
-            data-title="Campaña Especial 3" data-price="" data-desc="Novedades para tu bienestar." />
+          <picture>
+            <source srcset="img/Inicio/movil/3.webp" media="(max-width: 767px)">
+            <img src="img/Inicio/3.png" alt="Banner publicitario 3"
+              class="w-full h-auto md:h-[420px] lg:h-[520px] object-cover cursor-pointer" data-modal="producto"
+              data-title="Campaña Especial 3" data-price="" data-desc="Novedades para tu bienestar." />
+          </picture>
         </div>
 
         <div class="min-w-full">
-          <img src="img/Inicio/4.png" alt="Banner publicitario 4"
-            class="w-full h-[240px] md:h-[420px] lg:h-[520px] object-cover cursor-pointer" data-modal="producto"
-            data-title="Campaña Especial 4" data-price="" data-desc="Ofertas por tiempo limitado." />
+          <picture>
+            <source srcset="img/Inicio/movil/4.webp" media="(max-width: 767px)">
+            <img src="img/Inicio/4.png" alt="Banner publicitario 4"
+              class="w-full h-auto md:h-[420px] lg:h-[520px] object-cover cursor-pointer" data-modal="producto"
+              data-title="Campaña Especial 4" data-price="" data-desc="Ofertas por tiempo limitado." />
+          </picture>
         </div>
 
         <div class="min-w-full">
-          <img src="img/Inicio/5.png" alt="Banner publicitario 5"
-            class="w-full h-[240px] md:h-[420px] lg:h-[520px] object-cover cursor-pointer" data-modal="producto"
-            data-title="Campaña Especial 5" data-price="" data-desc="Marcas destacadas." />
+          <picture>
+            <source srcset="img/Inicio/movil/5.webp" media="(max-width: 767px)">
+            <img src="img/Inicio/5.png" alt="Banner publicitario 5"
+              class="w-full h-auto md:h-[420px] lg:h-[520px] object-cover cursor-pointer" data-modal="producto"
+              data-title="Campaña Especial 5" data-price="" data-desc="Marcas destacadas." />
+          </picture>
         </div>
 
         <div class="min-w-full">
-          <img src="img/Inicio/6.png" alt="Banner publicitario 6"
-            class="w-full h-[240px] md:h-[420px] lg:h-[520px] object-cover cursor-pointer" data-modal="producto"
-            data-title="Campaña Especial 6" data-price="" data-desc="Compra fácil y segura." />
+          <picture>
+            <source srcset="img/Inicio/movil/6.webp" media="(max-width: 767px)">
+            <img src="img/Inicio/6.png" alt="Banner publicitario 6"
+              class="w-full h-auto md:h-[420px] lg:h-[520px] object-cover cursor-pointer" data-modal="producto"
+              data-title="Campaña Especial 6" data-price="" data-desc="Compra fácil y segura." />
+          </picture>
         </div>
       </div>
 
@@ -239,6 +305,7 @@ include 'header.php';
     </div>
   </section>
 
+  <!-- BANNER INFERIOR  -->
   <div
     class="w-full elementor-element elementor-element-eab7742 ajuste-banner-bottom e-con-full e-flex wpr-particle-no wpr-jarallax-no wpr-parallax-no wpr-sticky-section-no e-con e-child hidden md:block"
     data-id="276400e" data-element_type="widget" data-widget_type="image.default">
@@ -251,7 +318,7 @@ include 'header.php';
     </div>
   </div>
 
-  <!-- CARRUSEL 1 -->
+  <!-- CARRUSEL Categorías de servicios saludables -->
   <section class="!mt-0 space-y-4 md:space-y-6 max-w-7xl mx-auto px-4">
     <h2 class="text-xl md:text-2xl font-semibold text-gray-900">Categorías de servicios saludables</h2>
 
@@ -349,7 +416,7 @@ include 'header.php';
     </div>
   </section>
 
-  <!-- CARRUSEL 2 -->
+  <!-- CARRUSEL Categorías de productos saludables -->
   <section class="space-y-4 md:space-y-6 max-w-7xl mx-auto px-4">
     <h2 class="text-xl md:text-2xl font-semibold text-gray-900">Categorías de productos saludables</h2>
 
@@ -441,7 +508,7 @@ include 'header.php';
     </div>
   </section>
 
-  <!-- CARRUSEL 3 -->
+  <!-- CARRUSEL Nuestras marcas -->
   <section class="space-y-4 md:space-y-6 max-w-7xl mx-auto px-4">
     <h2 class="text-xl md:text-2xl font-semibold text-gray-900">Nuestras marcas</h2>
 
@@ -535,105 +602,106 @@ include 'header.php';
       <div class="ofertas-bg ofertas-bg-productos"></div>
 
       <div class="ofertas-inner">
-        <div class="ofertas-track">
-          <article class="oferta-card js-product-card" data-price="38">
-            <div class="oferta-image-wrapper">
-              <img src="img/Inicio/4/1.png" alt="Extracto de algarrobo">
-              <div class="oferta-actions">
-                <button class="oferta-action-btn" title="Agregar al carrito"><i
-                    class="ph-shopping-cart-bold"></i></button>
-                <button class="oferta-action-btn" title="Vista rápida" data-modal="producto"
-                  data-title="EXTRACTO DE ALGARROBO" data-price="S/ 38.00"
-                  data-desc="Extracto natural de alta calidad."><i class="ph-eye-bold"></i></button>
-                <button class="oferta-action-btn" title="Ver producto"><i class="ph-link-bold"></i></button>
+        <div class="ofertas-viewport">
+          <div class="ofertas-track">
+            <article class="oferta-card js-product-card" data-price="38">
+              <div class="oferta-image-wrapper">
+                <img src="img/Inicio/4/1.png" alt="Extracto de algarrobo">
+                <div class="oferta-actions">
+                  <button class="oferta-action-btn" title="Agregar al carrito"><i
+                      class="ph-shopping-cart-bold"></i></button>
+                  <button class="oferta-action-btn" title="Vista rápida" data-modal="producto"
+                    data-title="EXTRACTO DE ALGARROBO" data-price="S/ 38.00"
+                    data-desc="Extracto natural de alta calidad."><i class="ph-eye-bold"></i></button>
+                  <button class="oferta-action-btn" title="Ver producto"><i class="ph-link-bold"></i></button>
+                </div>
               </div>
-            </div>
-            <div class="oferta-info">
-              <h3 class="oferta-title">EXTRACTO DE ALGARROBO</h3>
-              <p class="oferta-price">S/ 38.00</p>
-              <div class="oferta-stars">★★★★★</div>
-            </div>
-          </article>
+              <div class="oferta-info">
+                <h3 class="oferta-title">EXTRACTO DE ALGARROBO</h3>
+                <p class="oferta-price">S/ 38.00</p>
+                <div class="oferta-stars">★★★★★</div>
+              </div>
+            </article>
 
-          <article class="oferta-card js-product-card" data-price="50">
-            <div class="oferta-image-wrapper">
-              <img src="img/Inicio/4/2.png" alt="Profilaxis / Destartraje">
-              <div class="oferta-actions">
-                <button class="oferta-action-btn" title="Agregar al carrito"><i
-                    class="ph-shopping-cart-bold"></i></button>
-                <button class="oferta-action-btn" title="Vista rápida" data-modal="producto"
-                  data-title="Profilaxis / Destartraje" data-price="S/ 50.00"
-                  data-desc="Servicio dental especializado."><i class="ph-eye-bold"></i></button>
-                <button class="oferta-action-btn" title="Ver producto"><i class="ph-link-bold"></i></button>
+            <article class="oferta-card js-product-card" data-price="50">
+              <div class="oferta-image-wrapper">
+                <img src="img/Inicio/4/2.png" alt="Profilaxis / Destartraje">
+                <div class="oferta-actions">
+                  <button class="oferta-action-btn" title="Agregar al carrito"><i
+                      class="ph-shopping-cart-bold"></i></button>
+                  <button class="oferta-action-btn" title="Vista rápida" data-modal="producto"
+                    data-title="Profilaxis / Destartraje" data-price="S/ 50.00"
+                    data-desc="Servicio dental especializado."><i class="ph-eye-bold"></i></button>
+                  <button class="oferta-action-btn" title="Ver producto"><i class="ph-link-bold"></i></button>
+                </div>
               </div>
-            </div>
-            <div class="oferta-info">
-              <h3 class="oferta-title">Profilaxis / Destartraje</h3>
-              <p class="oferta-price">S/ 50.00</p>
-              <div class="oferta-stars">★★★★★</div>
-            </div>
-          </article>
+              <div class="oferta-info">
+                <h3 class="oferta-title">Profilaxis / Destartraje</h3>
+                <p class="oferta-price">S/ 50.00</p>
+                <div class="oferta-stars">★★★★★</div>
+              </div>
+            </article>
 
-          <article class="oferta-card js-product-card" data-price="80">
-            <div class="oferta-image-wrapper">
-              <img src="img/Inicio/4/3.png" alt="Ecografía obstétrica">
-              <div class="oferta-actions">
-                <button class="oferta-action-btn" title="Agregar al carrito"><i
-                    class="ph-shopping-cart-bold"></i></button>
-                <button class="oferta-action-btn" title="Vista rápida" data-modal="producto"
-                  data-title="Ecografía obstétrica" data-price="S/ 80.00"
-                  data-desc="Ecografía obstétrica de alta precisión."><i class="ph-eye-bold"></i></button>
-                <button class="oferta-action-btn" title="Ver producto"><i class="ph-link-bold"></i></button>
+            <article class="oferta-card js-product-card" data-price="80">
+              <div class="oferta-image-wrapper">
+                <img src="img/Inicio/4/3.png" alt="Ecografía obstétrica">
+                <div class="oferta-actions">
+                  <button class="oferta-action-btn" title="Agregar al carrito"><i
+                      class="ph-shopping-cart-bold"></i></button>
+                  <button class="oferta-action-btn" title="Vista rápida" data-modal="producto"
+                    data-title="Ecografía obstétrica" data-price="S/ 80.00"
+                    data-desc="Ecografía obstétrica de alta precisión."><i class="ph-eye-bold"></i></button>
+                  <button class="oferta-action-btn" title="Ver producto"><i class="ph-link-bold"></i></button>
+                </div>
               </div>
-            </div>
-            <div class="oferta-info">
-              <h3 class="oferta-title">Ecografía obstétrica</h3>
-              <p class="oferta-price">S/ 80.00</p>
-              <div class="oferta-stars">★★★★★</div>
-            </div>
-          </article>
+              <div class="oferta-info">
+                <h3 class="oferta-title">Ecografía obstétrica</h3>
+                <p class="oferta-price">S/ 80.00</p>
+                <div class="oferta-stars">★★★★★</div>
+              </div>
+            </article>
 
-          <article class="oferta-card js-product-card" data-price="38">
-            <div class="oferta-image-wrapper">
-              <img src="img/Inicio/4/1.png" alt="Extracto de algarrobo">
-              <div class="oferta-actions">
-                <button class="oferta-action-btn" title="Agregar al carrito"><i
-                    class="ph-shopping-cart-bold"></i></button>
-                <button class="oferta-action-btn" title="Vista rápida"><i class="ph-eye-bold"></i></button>
-                <button class="oferta-action-btn" title="Ver producto"><i class="ph-link-bold"></i></button>
+            <article class="oferta-card js-product-card" data-price="38">
+              <div class="oferta-image-wrapper">
+                <img src="img/Inicio/4/1.png" alt="Extracto de algarrobo">
+                <div class="oferta-actions">
+                  <button class="oferta-action-btn" title="Agregar al carrito"><i
+                      class="ph-shopping-cart-bold"></i></button>
+                  <button class="oferta-action-btn" title="Vista rápida"><i class="ph-eye-bold"></i></button>
+                  <button class="oferta-action-btn" title="Ver producto"><i class="ph-link-bold"></i></button>
+                </div>
               </div>
-            </div>
-            <div class="oferta-info">
-              <h3 class="oferta-title">EXTRACTO DE ALGARROBO</h3>
-              <p class="oferta-price">S/ 38.00</p>
-              <div class="oferta-stars">★★★★★</div>
-            </div>
-          </article>
+              <div class="oferta-info">
+                <h3 class="oferta-title">EXTRACTO DE ALGARROBO</h3>
+                <p class="oferta-price">S/ 38.00</p>
+                <div class="oferta-stars">★★★★★</div>
+              </div>
+            </article>
 
-          <article class="oferta-card js-product-card" data-price="50">
-            <div class="oferta-image-wrapper">
-              <img src="img/Inicio/4/2.png" alt="Profilaxis / Destartraje">
-              <div class="oferta-actions">
-                <button class="oferta-action-btn" title="Agregar al carrito"><i
-                    class="ph-shopping-cart-bold"></i></button>
-                <button class="oferta-action-btn" title="Vista rápida"><i class="ph-eye-bold"></i></button>
-                <button class="oferta-action-btn" title="Ver producto"><i class="ph-link-bold"></i></button>
+            <article class="oferta-card js-product-card" data-price="50">
+              <div class="oferta-image-wrapper">
+                <img src="img/Inicio/4/2.png" alt="Profilaxis / Destartraje">
+                <div class="oferta-actions">
+                  <button class="oferta-action-btn" title="Agregar al carrito"><i
+                      class="ph-shopping-cart-bold"></i></button>
+                  <button class="oferta-action-btn" title="Vista rápida"><i class="ph-eye-bold"></i></button>
+                  <button class="oferta-action-btn" title="Ver producto"><i class="ph-link-bold"></i></button>
+                </div>
               </div>
-            </div>
-            <div class="oferta-info">
-              <h3 class="oferta-title">Profilaxis / Destartraje</h3>
-              <p class="oferta-price">S/ 50.00</p>
-              <div class="oferta-stars">★★★★★</div>
-            </div>
-          </article>
-        </div>
+              <div class="oferta-info">
+                <h3 class="oferta-title">Profilaxis / Destartraje</h3>
+                <p class="oferta-price">S/ 50.00</p>
+                <div class="oferta-stars">★★★★★</div>
+              </div>
+            </article>
+          </div> <!-- /ofertas-track -->
+        </div> <!-- /ofertas-viewport -->
 
         <div class="ofertas-dots">
           <button type="button" data-oferta-dot="0" class="is-active"></button>
           <button type="button" data-oferta-dot="1"></button>
         </div>
       </div>
-    </div>
   </section>
 
   <section class="space-y-4 md:space-y-6 max-w-7xl mx-auto px-4">
@@ -643,65 +711,66 @@ include 'header.php';
       <div class="ofertas-bg ofertas-bg-servicios"></div>
 
       <div class="ofertas-inner">
-        <div class="ofertas-track">
-          <article class="oferta-card js-product-card" data-price="45">
-            <div class="oferta-image-wrapper">
-              <img src="img/Inicio/5/1.png" alt="Servicio 1">
-              <div class="oferta-actions">
-                <button class="oferta-action-btn" title="Agregar al carrito"><i
-                    class="ph-shopping-cart-bold"></i></button>
-                <button class="oferta-action-btn" title="Vista rápida"><i class="ph-eye-bold"></i></button>
-                <button class="oferta-action-btn" title="Ver producto"><i class="ph-link-bold"></i></button>
+        <div class="ofertas-viewport">
+          <div class="ofertas-track">
+            <article class="oferta-card js-product-card" data-price="45">
+              <div class="oferta-image-wrapper">
+                <img src="img/Inicio/5/1.png" alt="Servicio 1">
+                <div class="oferta-actions">
+                  <button class="oferta-action-btn" title="Agregar al carrito"><i
+                      class="ph-shopping-cart-bold"></i></button>
+                  <button class="oferta-action-btn" title="Vista rápida"><i class="ph-eye-bold"></i></button>
+                  <button class="oferta-action-btn" title="Ver producto"><i class="ph-link-bold"></i></button>
+                </div>
               </div>
-            </div>
-            <div class="oferta-info">
-              <h3 class="oferta-title">Limpieza Profunda</h3>
-              <p class="oferta-price">S/ 45.00</p>
-              <div class="oferta-stars">★★★★★</div>
-            </div>
-          </article>
+              <div class="oferta-info">
+                <h3 class="oferta-title">Limpieza Profunda</h3>
+                <p class="oferta-price">S/ 45.00</p>
+                <div class="oferta-stars">★★★★★</div>
+              </div>
+            </article>
 
-          <article class="oferta-card js-product-card" data-price="60">
-            <div class="oferta-image-wrapper">
-              <img src="img/Inicio/5/2.png" alt="Servicio 2">
-              <div class="oferta-actions">
-                <button class="oferta-action-btn" title="Agregar al carrito"><i
-                    class="ph-shopping-cart-bold"></i></button>
-                <button class="oferta-action-btn" title="Vista rápida"><i class="ph-eye-bold"></i></button>
-                <button class="oferta-action-btn" title="Ver producto"><i class="ph-link-bold"></i></button>
+            <article class="oferta-card js-product-card" data-price="60">
+              <div class="oferta-image-wrapper">
+                <img src="img/Inicio/5/2.png" alt="Servicio 2">
+                <div class="oferta-actions">
+                  <button class="oferta-action-btn" title="Agregar al carrito"><i
+                      class="ph-shopping-cart-bold"></i></button>
+                  <button class="oferta-action-btn" title="Vista rápida"><i class="ph-eye-bold"></i></button>
+                  <button class="oferta-action-btn" title="Ver producto"><i class="ph-link-bold"></i></button>
+                </div>
               </div>
-            </div>
-            <div class="oferta-info">
-              <h3 class="oferta-title">Consulta Nutricional</h3>
-              <p class="oferta-price">S/ 60.00</p>
-              <div class="oferta-stars">★★★★★</div>
-            </div>
-          </article>
+              <div class="oferta-info">
+                <h3 class="oferta-title">Consulta Nutricional</h3>
+                <p class="oferta-price">S/ 60.00</p>
+                <div class="oferta-stars">★★★★★</div>
+              </div>
+            </article>
 
-          <article class="oferta-card js-product-card" data-price="70">
-            <div class="oferta-image-wrapper">
-              <img src="img/Inicio/5/3.png" alt="Servicio 3">
-              <div class="oferta-actions">
-                <button class="oferta-action-btn" title="Agregar al carrito"><i
-                    class="ph-shopping-cart-bold"></i></button>
-                <button class="oferta-action-btn" title="Vista rápida"><i class="ph-eye-bold"></i></button>
-                <button class="oferta-action-btn" title="Ver producto"><i class="ph-link-bold"></i></button>
+            <article class="oferta-card js-product-card" data-price="70">
+              <div class="oferta-image-wrapper">
+                <img src="img/Inicio/5/3.png" alt="Servicio 3">
+                <div class="oferta-actions">
+                  <button class="oferta-action-btn" title="Agregar al carrito"><i
+                      class="ph-shopping-cart-bold"></i></button>
+                  <button class="oferta-action-btn" title="Vista rápida"><i class="ph-eye-bold"></i></button>
+                  <button class="oferta-action-btn" title="Ver producto"><i class="ph-link-bold"></i></button>
+                </div>
               </div>
-            </div>
-            <div class="oferta-info">
-              <h3 class="oferta-title">Masaje Relajante</h3>
-              <p class="oferta-price">S/ 70.00</p>
-              <div class="oferta-stars">★★★★★</div>
-            </div>
-          </article>
-        </div>
+              <div class="oferta-info">
+                <h3 class="oferta-title">Masaje Relajante</h3>
+                <p class="oferta-price">S/ 70.00</p>
+                <div class="oferta-stars">★★★★★</div>
+              </div>
+            </article>
+          </div> <!-- /ofertas-track -->
+        </div> <!-- /ofertas-viewport -->
 
         <div class="ofertas-dots">
           <button type="button" data-oferta-dot="0" class="is-active"></button>
           <button type="button" data-oferta-dot="1"></button>
         </div>
       </div>
-    </div>
   </section>
 
   <section class="space-y-4 md:space-y-6 max-w-7xl mx-auto px-4">
@@ -711,124 +780,172 @@ include 'header.php';
       <div class="ofertas-bg ofertas-bg-nuevos"></div>
 
       <div class="ofertas-inner">
-        <div class="ofertas-track">
-          <article class="oferta-card js-product-card" data-price="25">
-            <div class="oferta-image-wrapper">
-              <img src="img/Inicio/6/1.png" alt="Producto nuevo 1">
-              <div class="oferta-actions">
-                <button class="oferta-action-btn" title="Agregar al carrito"><i
-                    class="ph-shopping-cart-bold"></i></button>
-                <button class="oferta-action-btn" title="Vista rápida"><i class="ph-eye-bold"></i></button>
-                <button class="oferta-action-btn" title="Ver producto"><i class="ph-link-bold"></i></button>
+        <div class="ofertas-viewport">
+          <div class="ofertas-track">
+            <article class="oferta-card js-product-card" data-price="25">
+              <div class="oferta-image-wrapper">
+                <img src="img/Inicio/6/1.png" alt="Producto nuevo 1">
+                <div class="oferta-actions">
+                  <button class="oferta-action-btn" title="Agregar al carrito"><i
+                      class="ph-shopping-cart-bold"></i></button>
+                  <button class="oferta-action-btn" title="Vista rápida"><i class="ph-eye-bold"></i></button>
+                  <button class="oferta-action-btn" title="Ver producto"><i class="ph-link-bold"></i></button>
+                </div>
               </div>
-            </div>
-            <div class="oferta-info">
-              <h3 class="oferta-title">Suplemento Vitamínico</h3>
-              <p class="oferta-price">S/ 25.00</p>
-              <div class="oferta-stars">★★★★★</div>
-            </div>
-          </article>
+              <div class="oferta-info">
+                <h3 class="oferta-title">Suplemento Vitamínico</h3>
+                <p class="oferta-price">S/ 25.00</p>
+                <div class="oferta-stars">★★★★★</div>
+              </div>
+            </article>
 
-          <article class="oferta-card js-product-card" data-price="90">
-            <div class="oferta-image-wrapper">
-              <img src="img/Inicio/6/2.png" alt="Producto nuevo 2">
-              <div class="oferta-actions">
-                <button class="oferta-action-btn" title="Agregar al carrito"><i
-                    class="ph-shopping-cart-bold"></i></button>
-                <button class="oferta-action-btn" title="Vista rápida"><i class="ph-eye-bold"></i></button>
-                <button class="oferta-action-btn" title="Ver producto"><i class="ph-link-bold"></i></button>
+            <article class="oferta-card js-product-card" data-price="90">
+              <div class="oferta-image-wrapper">
+                <img src="img/Inicio/6/2.png" alt="Producto nuevo 2">
+                <div class="oferta-actions">
+                  <button class="oferta-action-btn" title="Agregar al carrito"><i
+                      class="ph-shopping-cart-bold"></i></button>
+                  <button class="oferta-action-btn" title="Vista rápida"><i class="ph-eye-bold"></i></button>
+                  <button class="oferta-action-btn" title="Ver producto"><i class="ph-link-bold"></i></button>
+                </div>
               </div>
-            </div>
-            <div class="oferta-info">
-              <h3 class="oferta-title">Proteína Vegetal</h3>
-              <p class="oferta-price">S/ 90.00</p>
-              <div class="oferta-stars">★★★★★</div>
-            </div>
-          </article>
+              <div class="oferta-info">
+                <h3 class="oferta-title">Proteína Vegetal</h3>
+                <p class="oferta-price">S/ 90.00</p>
+                <div class="oferta-stars">★★★★★</div>
+              </div>
+            </article>
 
-          <article class="oferta-card js-product-card" data-price="35">
-            <div class="oferta-image-wrapper">
-              <img src="img/Inicio/6/3.png" alt="Producto nuevo 3">
-              <div class="oferta-actions">
-                <button class="oferta-action-btn" title="Agregar al carrito"><i
-                    class="ph-shopping-cart-bold"></i></button>
-                <button class="oferta-action-btn" title="Vista rápida"><i class="ph-eye-bold"></i></button>
-                <button class="oferta-action-btn" title="Ver producto"><i class="ph-link-bold"></i></button>
+            <article class="oferta-card js-product-card" data-price="35">
+              <div class="oferta-image-wrapper">
+                <img src="img/Inicio/6/3.png" alt="Producto nuevo 3">
+                <div class="oferta-actions">
+                  <button class="oferta-action-btn" title="Agregar al carrito"><i
+                      class="ph-shopping-cart-bold"></i></button>
+                  <button class="oferta-action-btn" title="Vista rápida"><i class="ph-eye-bold"></i></button>
+                  <button class="oferta-action-btn" title="Ver producto"><i class="ph-link-bold"></i></button>
+                </div>
               </div>
-            </div>
-            <div class="oferta-info">
-              <h3 class="oferta-title">Aceite de Coco</h3>
-              <p class="oferta-price">S/ 35.00</p>
-              <div class="oferta-stars">★★★★★</div>
-            </div>
-          </article>
-        </div>
+              <div class="oferta-info">
+                <h3 class="oferta-title">Aceite de Coco</h3>
+                <p class="oferta-price">S/ 35.00</p>
+                <div class="oferta-stars">★★★★★</div>
+              </div>
+            </article>
+          </div> <!-- /ofertas-track -->
+        </div> <!-- /ofertas-viewport -->
 
         <div class="ofertas-dots">
           <button type="button" data-oferta-dot="0" class="is-active"></button>
           <button type="button" data-oferta-dot="1"></button>
         </div>
       </div>
-    </div>
   </section>
 
-  <!-- BANNER PRINCIPAL (data-banner-track + dots) -->
-  <section class="mt-10 space-y-4 max-w-7xl mx-auto px-4">
-    <h2 class="text-xl md:text-2xl font-semibold text-gray-900">Banners publicitarios</h2>
+  <!-- BANNERS PUBLICITARIOS (Secuencia Slider -> Estático -> Slider -> Estático) -->
+  <section class="mt-10 space-y-8 w-full overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4">
+      <h2 class="text-xl md:text-2xl font-semibold text-gray-900">Banners publicitarios</h2>
+    </div>
 
-    <div class="banner-wrapper">
-      <div class="banner-track" data-banner-track>
-
-        <div class="banner-slide" data-banner-slide>
-          <div class="banner-grid-top mb-4">
-            <article class="banner-card banner-card-lg">
-              <img src="img/Inicio/7/1.png" alt="Banner principal 1">
-            </article>
-
-            <div class="banner-grid-right">
-              <article class="banner-card banner-card-sm">
-                <img src="img/Inicio/7/2.png" alt="Banner derecho 1">
+    <!-- BLOQUE 1: Slider Grandes (Contenido en contenedor) -->
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="banner-wrapper">
+        <div class="banner-track" data-banner-track>
+          <!-- Slide 1 -->
+          <div class="banner-slide" data-banner-slide>
+            <div class="banner-grid-top">
+              <article class="banner-card banner-card-lg">
+                <img src="img/Inicio/7/1.png" alt="Banner 1">
               </article>
-              <article class="banner-card banner-card-sm">
-                <img src="img/Inicio/7/3.png" alt="Banner derecho 2">
-              </article>
-            </div>
-          </div>
-
-          <div class="banner-grid-bottom">
-            <article class="banner-card banner-card-md"><img src="img/Inicio/7/5.png" alt="Banner inferior 1"></article>
-            <article class="banner-card banner-card-md"><img src="img/Inicio/7/6.png" alt="Banner inferior 2"></article>
-            <article class="banner-card banner-card-md"><img src="img/Inicio/7/7.png" alt="Banner inferior 3"></article>
-          </div>
-        </div>
-
-        <div class="banner-slide" data-banner-slide>
-          <div class="banner-grid-top mb-4">
-            <article class="banner-card banner-card-lg">
-              <img src="img/Inicio/7/1.png" alt="Banner principal 2">
-            </article>
-
-            <div class="banner-grid-right">
-              <article class="banner-card banner-card-sm"><img src="img/Inicio/7/2.png" alt="Banner derecho 2-1">
-              </article>
-              <article class="banner-card banner-card-sm"><img src="img/Inicio/7/3.png" alt="Banner derecho 2-2">
+              <article class="banner-card banner-card-lg">
+                <img src="img/Inicio/7/2.png" alt="Banner 2">
               </article>
             </div>
           </div>
-
-          <div class="banner-grid-bottom">
-            <article class="banner-card banner-card-md"><img src="img/Inicio/7/5.png" alt="Banner inferior 2-1">
-            </article>
-            <article class="banner-card banner-card-md"><img src="img/Inicio/7/6.png" alt="Banner inferior 2-2">
-            </article>
-            <article class="banner-card banner-card-md"><img src="img/Inicio/7/7.png" alt="Banner inferior 2-3">
-            </article>
+          <!-- Slide 2 -->
+          <div class="banner-slide" data-banner-slide>
+            <div class="banner-grid-top">
+              <article class="banner-card banner-card-lg">
+                <img src="img/Inicio/7/3.png" alt="Banner 3">
+              </article>
+              <article class="banner-card banner-card-lg">
+                <img src="img/Inicio/7/4.png" alt="Banner 4">
+              </article>
+            </div>
           </div>
         </div>
-
+        <div class="banner-dots"></div>
       </div>
+    </div>
 
-      <div class="banner-dots" id="bannerDots"></div>
+    <!-- BLOQUE 2: Banners Estáticos (3 Pequeños) -->
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="cat-carousel" data-items="3">
+        <div class="cat-track">
+          <div class="cat-item-banner hover:scale-[1.02] transition-transform">
+            <img src="img/banners_publicitarios/banner_pequeno/banner_pequeno_2.1.webp" alt="Banner Pequeno 4.1">
+          </div>
+          <div class="cat-item-banner hover:scale-[1.02] transition-transform">
+            <img src="img/banners_publicitarios/banner_pequeno/banner_pequeno_2.2.webp" alt="Banner Pequeno 4.2">
+          </div>
+          <div class="cat-item-banner hover:scale-[1.02] transition-transform">
+            <img src="img/banners_publicitarios/banner_pequeno/banner_pequeno_2.3.webp" alt="Banner Pequeno 4.3">
+          </div>
+          <div class="cat-item-banner hover:scale-[1.02] transition-transform">
+            <img src="img/banners_publicitarios/banner_pequeno/banner_pequeno_2.4.webp" alt="Banner Pequeno 4.4">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BLOQUE 3: Otro Slider Grandes -->
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="banner-wrapper">
+        <div class="banner-track" data-banner-track>
+          <div class="banner-slide" data-banner-slide>
+            <div class="banner-grid-top">
+              <article class="banner-card banner-card-lg">
+                <img src="img/banners_publicitarios/banner_mediano/banner_mediano_3.1.webp" alt="Banner 3-alt">
+              </article>
+              <article class="banner-card banner-card-lg">
+                <img src="img/banners_publicitarios/banner_mediano/banner_mediano_3.2.webp" alt="Banner 4-alt">
+              </article>
+            </div>
+          </div>
+          <div class="banner-slide" data-banner-slide>
+            <div class="banner-grid-top">
+              <article class="banner-card banner-card-lg">
+                <img src="img/banners_publicitarios/banner_mediano/banner_mediano_3.3.webp" alt="Banner 1-alt">
+              </article>
+              <article class="banner-card banner-card-lg">
+                <img src="img/banners_publicitarios/banner_mediano/banner_mediano_3.1.webp" alt="Banner 2-alt">
+              </article>
+            </div>
+          </div>
+        </div>
+        <div class="banner-dots"></div>
+      </div>
+    </div>
+
+    <!-- BLOQUE 4: Slider Banners Pequeños (Draggable, sin puntos) -->
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="cat-carousel" data-items="3">
+        <div class="cat-track">
+          <div class="cat-item-banner hover:scale-[1.02] transition-transform">
+            <img src="img/banners_publicitarios/banner_pequeno/banner_pequeno_4.1.webp" alt="Banner Pequeno 4.1">
+          </div>
+          <div class="cat-item-banner hover:scale-[1.02] transition-transform">
+            <img src="img/banners_publicitarios/banner_pequeno/banner_pequeno_4.2.webp" alt="Banner Pequeno 4.2">
+          </div>
+          <div class="cat-item-banner hover:scale-[1.02] transition-transform">
+            <img src="img/banners_publicitarios/banner_pequeno/banner_pequeno_4.3.webp" alt="Banner Pequeno 4.3">
+          </div>
+          <div class="cat-item-banner hover:scale-[1.02] transition-transform">
+            <img src="img/banners_publicitarios/banner_pequeno/banner_pequeno_4.4.webp" alt="Banner Pequeno 4.4">
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -935,6 +1052,7 @@ include 'header.php';
     </div>
   </section>
 
+  <!-- Servicios médicos -->
   <section class="section-servicios max-w-7xl mx-auto px-4">
     <h2 class="section-title">Servicios médicos</h2>
 
@@ -946,14 +1064,14 @@ include 'header.php';
       <div class="cat-carousel" data-items="3">
         <div class="cat-track" id="track-servicios">
           <div class="cat-item">
-            <img src="img/Inicio/10/2.png" alt="Masajes Corporales" class="cat-img">
+            <img src="img/Inicio/10/3.png" alt="Masajes Corporales" class="cat-img">
             <h3 class="cat-title">Masajes Corporales</h3>
             <p class="cat-price">S/ 30.00</p>
             <p class="cat-stars">★★★★★</p>
           </div>
 
           <div class="cat-item">
-            <img src="img/Inicio/10/3.png" alt="Blanqueamiento Dental" class="cat-img">
+            <img src="img/Inicio/10/2.png" alt="Blanqueamiento Dental" class="cat-img">
             <h3 class="cat-title">Blanqueamiento Dental</h3>
             <p class="cat-price">S/ 120.00</p>
             <p class="cat-stars">★★★★★</p>
@@ -967,14 +1085,14 @@ include 'header.php';
           </div>
 
           <div class="cat-item">
-            <img src="img/Inicio/10/2.png" alt="Masajes Corporales" class="cat-img">
+            <img src="img/Inicio/10/3.png" alt="Masajes Corporales" class="cat-img">
             <h3 class="cat-title">Masajes Corporales</h3>
             <p class="cat-price">S/ 30.00</p>
             <p class="cat-stars">★★★★★</p>
           </div>
 
           <div class="cat-item">
-            <img src="img/Inicio/10/3.png" alt="Blanqueamiento Dental" class="cat-img">
+            <img src="img/Inicio/10/2.png" alt="Blanqueamiento Dental" class="cat-img">
             <h3 class="cat-title">Blanqueamiento Dental</h3>
             <p class="cat-price">S/ 120.00</p>
             <p class="cat-stars">★★★★★</p>
@@ -986,6 +1104,49 @@ include 'header.php';
             <p class="cat-price">S/ 120.00</p>
             <p class="cat-stars">★★★★★</p>
           </div>
+        </div>
+
+        <div class="cat-dots" id="dots-servicios"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Servicios en medicina natural -->
+  <section class="section-servicios max-w-7xl mx-auto px-4">
+    <h2 class="section-title">Servicios en medicina natural</h2>
+
+    <div class="category-wrapper">
+      <div class="category-left">
+        <img src="img/Servicios/MedicinaNatural/SERVICIOS DE MEDICINA NATURAL.webp" alt="Servicios en medicina natural"
+          class="category-banner">
+      </div>
+
+      <div class="cat-carousel" data-items="3">
+        <div class="cat-track" id="track-servicios">
+          <div class="cat-item">
+            <img src="img/Servicios/MedicinaNatural/MASAJE CORPORAL.webp" alt="Masajes Corporales" class="cat-img">
+            <h3 class="cat-title">Masajes Corporales</h3>
+            <p class="cat-price">S/ 30.00</p>
+            <p class="cat-stars">★★★★★</p>
+          </div>
+
+          <div class="cat-item">
+            <img src="img/Servicios/MedicinaNatural/4-PEDICURA-1-300x300.webp" alt="Blanqueamiento Dental"
+              class="cat-img">
+            <h3 class="cat-title">Pedicura</h3>
+            <p class="cat-price">S/ 40.00</p>
+            <p class="cat-stars">★★★★★</p>
+          </div>
+
+          <div class="cat-item">
+            <img src="img/Servicios/MedicinaNatural/4-EXFOLIACION-CORPORAL-1-300x300.webp" alt="Diagnóstico unipolar"
+              class="cat-img">
+            <h3 class="cat-title">Exfoliacion Corporal</h3>
+            <p class="cat-price">S/ 150.00</p>
+            <p class="cat-stars">★★★★★</p>
+          </div>
+
+          
         </div>
 
         <div class="cat-dots" id="dots-servicios"></div>

@@ -6,58 +6,30 @@ const closeMobileMenu = document.getElementById("closeMobileMenu");
 
 function openMobileMenu() {
   if (!mobileMenu || !mobileMenuOverlay) return;
-
-  // Mostrar overlay
   mobileMenuOverlay.classList.remove("hidden");
-
-  // Deslizar menú desde la izquierda
   setTimeout(() => {
     mobileMenu.classList.remove("-translate-x-full");
     mobileMenu.classList.add("translate-x-0");
   }, 10);
-
-  // Prevenir scroll del body
   document.body.style.overflow = "hidden";
 }
 
 function closeMobileMenuFunc() {
   if (!mobileMenu || !mobileMenuOverlay) return;
-
-  // Ocultar menú
   mobileMenu.classList.add("-translate-x-full");
   mobileMenu.classList.remove("translate-x-0");
-
-  // Ocultar overlay después de la animación
   setTimeout(() => {
     mobileMenuOverlay.classList.add("hidden");
   }, 300);
-
-  // Restaurar scroll del body
   document.body.style.overflow = "";
 }
 
-// Abrir menú con botón hamburguesa
-if (btnMenu) {
-  btnMenu.addEventListener("click", openMobileMenu);
-}
-
-// Cerrar menú con botón X
-if (closeMobileMenu) {
-  closeMobileMenu.addEventListener("click", closeMobileMenuFunc);
-}
-
-// Cerrar menú al hacer clic en el overlay
-if (mobileMenuOverlay) {
-  mobileMenuOverlay.addEventListener("click", closeMobileMenuFunc);
-}
-
-// Cerrar menú al hacer clic en un enlace (opcional, con delay para feedback visual)
+if (btnMenu) btnMenu.addEventListener("click", openMobileMenu);
+if (closeMobileMenu) closeMobileMenu.addEventListener("click", closeMobileMenuFunc);
+if (mobileMenuOverlay) mobileMenuOverlay.addEventListener("click", closeMobileMenuFunc);
 if (mobileMenu) {
-  const menuLinks = mobileMenu.querySelectorAll("a");
-  menuLinks.forEach(link => {
-    link.addEventListener("click", () => {
-      setTimeout(closeMobileMenuFunc, 200);
-    });
+  mobileMenu.querySelectorAll("a").forEach(link => {
+    link.addEventListener("click", () => setTimeout(closeMobileMenuFunc, 200));
   });
 }
 
@@ -587,22 +559,23 @@ function initCarousel(trackId, prevId, nextId, intervalMs) {
     track.style.transform = `translateX(-${index * 100}%)`;
   }
 
-  function handleTouchStart(e) {
-    startX = e.touches[0].clientX;
+  function handleStart(e) {
+    startX = e.type.includes("mouse") ? e.pageX : e.touches[0].clientX;
+    currentX = startX;
     isDragging = true;
     if (autoTimer) clearInterval(autoTimer);
     track.style.transition = "none";
   }
 
-  function handleTouchMove(e) {
+  function handleMove(e) {
     if (!isDragging) return;
-    currentX = e.touches[0].clientX;
+    currentX = e.type.includes("mouse") ? e.pageX : e.touches[0].clientX;
     const diff = currentX - startX;
     const moveX = -(index * 100) + (diff / track.offsetWidth) * 100;
     track.style.transform = `translateX(${moveX}%)`;
   }
 
-  function handleTouchEnd() {
+  function handleEnd() {
     if (!isDragging) return;
     isDragging = false;
     const diff = currentX - startX;
@@ -627,9 +600,13 @@ function initCarousel(trackId, prevId, nextId, intervalMs) {
   if (nextBtn) nextBtn.addEventListener("click", () => { showSlide(index + 1); startAuto(); });
   if (prevBtn) prevBtn.addEventListener("click", () => { showSlide(index - 1); startAuto(); });
 
-  track.addEventListener("touchstart", handleTouchStart, { passive: true });
-  track.addEventListener("touchmove", handleTouchMove, { passive: true });
-  track.addEventListener("touchend", handleTouchEnd);
+  track.addEventListener("mousedown", handleStart);
+  window.addEventListener("mousemove", handleMove);
+  window.addEventListener("mouseup", handleEnd);
+
+  track.addEventListener("touchstart", handleStart, { passive: true });
+  track.addEventListener("touchmove", handleMove, { passive: true });
+  track.addEventListener("touchend", handleEnd);
 
   startAuto();
 }
@@ -676,8 +653,46 @@ function initMultiCarousel(trackId, prevId, nextId, intervalMs) {
     }
   }
 
+  // Swipe / Drag logic
+  let startX = 0, currentX = 0, isDragging = false;
+  function handleStart(e) {
+    startX = e.type.includes("mouse") ? e.pageX : e.touches[0].clientX;
+    currentX = startX;
+    isDragging = true;
+    track.style.transition = "none";
+    if (autoTimer) clearInterval(autoTimer);
+  }
+  function handleMove(e) {
+    if (!isDragging) return;
+    currentX = e.type.includes("mouse") ? e.pageX : e.touches[0].clientX;
+    const diff = currentX - startX;
+    const offset = -(currentIndex * 100) + (diff / track.offsetWidth) * 100;
+    track.style.transform = `translateX(${offset}px)`; // Actually it should be % for consistency with showStep
+    track.style.transform = `translateX(calc(-${currentIndex * 100}% + ${diff}px))`;
+  }
+  function handleEnd() {
+    if (!isDragging) return;
+    isDragging = false;
+    const diff = currentX - startX;
+    if (Math.abs(diff) > 50) {
+      if (diff > 0) showStep(currentIndex - 1);
+      else showStep(currentIndex + 1);
+    } else {
+      showStep(currentIndex);
+    }
+    startAuto();
+  }
+
   if (nextBtn) nextBtn.addEventListener("click", () => { showStep(currentIndex + 1); startAuto(); });
   if (prevBtn) prevBtn.addEventListener("click", () => { showStep(currentIndex - 1); startAuto(); });
+
+  track.addEventListener("mousedown", handleStart);
+  window.addEventListener("mousemove", handleMove);
+  window.addEventListener("mouseup", handleEnd);
+
+  track.addEventListener("touchstart", handleStart, { passive: true });
+  track.addEventListener("touchmove", handleMove, { passive: true });
+  track.addEventListener("touchend", handleEnd);
 
   window.addEventListener("resize", () => {
     // Re-ajustar posición al cambiar el tamaño de ventana si el índice queda fuera de rango
@@ -785,9 +800,8 @@ function initOfertas() {
     let autoTimer = null;
 
     function getItemsPerView() {
-      if (window.innerWidth < 640) return 1;
-      if (window.innerWidth < 1024) return 2;
-      return 3;
+      if (window.innerWidth < 1024) return 1;
+      return 2;
     }
 
     function getItemWidth() {
@@ -796,87 +810,123 @@ function initOfertas() {
       return items[0].offsetWidth + marginRight;
     }
 
-    function getTotalSlides() {
+    function getTotalPages() {
       const perView = getItemsPerView();
-      return Math.max(1, items.length - perView + 1);
+      return Math.ceil(items.length / perView);
     }
 
     function renderDots() {
-      const total = getTotalSlides();
+      const total = getTotalPages();
       dotsContainer.innerHTML = "";
       for (let i = 0; i < total; i++) {
         const dot = document.createElement("button");
         dot.type = "button";
         if (i === currentIndex) dot.classList.add("is-active");
-        dot.addEventListener("click", () => goToSlide(i, true));
+        dot.dataset.page = i;
+        dot.addEventListener("click", () => {
+          currentIndex = i;
+          updateCarousel();
+          startAuto();
+        });
         dotsContainer.appendChild(dot);
       }
     }
 
-    function goToSlide(index, stopAuto = false) {
-      const total = getTotalSlides();
-      currentIndex = Math.min(Math.max(0, index), total - 1);
-      const offset = -(currentIndex * getItemWidth());
+    function updateCarousel() {
+      const perView = getItemsPerView();
+      const total = getTotalPages();
 
-      track.style.transition = "transform 0.6s cubic-bezier(0.22, 0.61, 0.36, 1)";
-      track.style.transform = `translateX(${offset}px)`;
+      // Loop infinito: si el índice se sale del rango, vuelve al inicio
+      if (currentIndex >= total) currentIndex = 0;
+      if (currentIndex < 0) currentIndex = total - 1;
 
-      const dots = dotsContainer.querySelectorAll("button");
-      dots.forEach((d, i) => d.classList.toggle("is-active", i === currentIndex));
+      const offset = currentIndex * (getItemWidth() * perView);
+      track.style.transform = `translateX(-${offset}px)`;
 
-      if (stopAuto) startAuto();
-    }
-
-    function handleTouchStart(e) {
-      startX = e.touches[0].clientX;
-      isDragging = true;
-      track.style.transition = "none";
-      if (autoTimer) clearInterval(autoTimer);
-      wrapper.classList.add("mobile-active");
-    }
-
-    function handleTouchMove(e) {
-      if (!isDragging) return;
-      currentX = e.touches[0].clientX;
-      const diff = currentX - startX;
-      const offset = -(currentIndex * getItemWidth()) + diff;
-      track.style.transform = `translateX(${offset}px)`;
-    }
-
-    function handleTouchEnd() {
-      if (!isDragging) return;
-      isDragging = false;
-      const diff = currentX - startX;
-      if (Math.abs(diff) > 50) {
-        if (diff > 0) goToSlide(currentIndex - 1);
-        else goToSlide(currentIndex + 1);
-      } else {
-        goToSlide(currentIndex);
-      }
-      setTimeout(() => wrapper.classList.remove("mobile-active"), 300);
-      startAuto();
+      // Actualizar dots
+      Array.from(dotsContainer.children).forEach((dot, idx) => {
+        dot.classList.toggle("is-active", idx === currentIndex);
+      });
     }
 
     function startAuto() {
       if (autoTimer) clearInterval(autoTimer);
       autoTimer = setInterval(() => {
-        let next = currentIndex + 1;
-        if (next >= getTotalSlides()) next = 0;
-        goToSlide(next);
-      }, 6000);
+        currentIndex++;
+        updateCarousel();
+      }, 5000);
     }
 
-    track.addEventListener("touchstart", handleTouchStart, { passive: true });
-    track.addEventListener("touchmove", handleTouchMove, { passive: true });
-    track.addEventListener("touchend", handleTouchEnd);
+    // Inicializar
+    renderDots();
+    updateCarousel();
+    startAuto();
+
+    // Swipe / Drag
+    track.addEventListener("mousedown", (e) => {
+      startX = e.pageX;
+      isDragging = true;
+      track.style.transition = "none";
+      if (autoTimer) clearInterval(autoTimer);
+    });
+
+    window.addEventListener("mousemove", (e) => {
+      if (!isDragging) return;
+      currentX = e.pageX;
+      const diff = currentX - startX;
+      const perView = getItemsPerView();
+      const offset = -(currentIndex * (getItemWidth() * perView)) + diff;
+      track.style.transform = `translateX(${offset}px)`;
+    });
+
+    window.addEventListener("mouseup", (e) => {
+      if (!isDragging) return;
+      isDragging = false;
+      track.style.transition = "transform .6s cubic-bezier(0.22, 0.61, 0.36, 1)";
+      const diff = currentX - startX;
+
+      if (Math.abs(diff) > 70) {
+        if (diff > 0) currentIndex--;
+        else currentIndex++;
+      }
+      updateCarousel();
+      startAuto();
+    });
 
     window.addEventListener("resize", () => {
       renderDots();
-      goToSlide(currentIndex);
+      updateCarousel();
     });
 
-    renderDots();
-    startAuto();
+    track.addEventListener("touchstart", (e) => {
+      startX = e.touches[0].clientX;
+      isDragging = true;
+      track.style.transition = "none";
+      if (autoTimer) clearInterval(autoTimer);
+    }, { passive: true });
+
+    track.addEventListener("touchmove", (e) => {
+      if (!isDragging) return;
+      currentX = e.touches[0].clientX;
+      const diff = currentX - startX;
+      const perView = getItemsPerView();
+      const offset = -(currentIndex * (getItemWidth() * perView)) + diff;
+      track.style.transform = `translateX(${offset}px)`;
+    }, { passive: true });
+
+    track.addEventListener("touchend", () => {
+      if (!isDragging) return;
+      isDragging = false;
+      track.style.transition = "transform .6s cubic-bezier(0.22, 0.61, 0.36, 1)";
+      const diff = currentX - startX;
+
+      if (Math.abs(diff) > 70) {
+        if (diff > 0) currentIndex--;
+        else currentIndex++;
+      }
+      updateCarousel();
+      startAuto();
+    });
   });
 }
 
@@ -930,63 +980,124 @@ function initOfertasParallax() {
 
 // ===================== BANNER PRINCIPAL (data-banner-track) =====================
 function initBanner() {
-  const track = document.querySelector("[data-banner-track]");
-  if (!track) return;
+  const tracks = document.querySelectorAll("[data-banner-track]");
+  if (!tracks.length) return;
 
-  const slides = Array.from(track.querySelectorAll("[data-banner-slide]"));
-  const dotsContainer = document.getElementById("bannerDots");
-  if (!dotsContainer || !slides.length) return;
+  tracks.forEach((track) => {
+    const slides = Array.from(track.querySelectorAll("[data-banner-slide]"));
+    const wrapper = track.closest(".banner-wrapper");
+    const dotsContainer = wrapper ? wrapper.querySelector(".banner-dots") : null;
+    if (!slides.length) return;
 
-  let current = 0;
-  let autoTimer = null;
+    let current = 0;
+    let autoTimer = null;
+    let isDragging = false;
+    let startX = 0;
+    let currentX = 0;
 
-  slides.forEach((_, index) => {
-    const btn = document.createElement("button");
-    if (index === 0) btn.classList.add("is-active");
-    btn.addEventListener("click", () => goToSlide(index, true));
-    dotsContainer.appendChild(btn);
-  });
+    // Render dots if container exists
+    if (dotsContainer) {
+      dotsContainer.innerHTML = "";
+      slides.forEach((_, index) => {
+        const btn = document.createElement("button");
+        if (index === 0) btn.classList.add("is-active");
+        btn.addEventListener("click", () => goToSlide(index, true));
+        dotsContainer.appendChild(btn);
+      });
+    }
 
-  const dots = Array.from(dotsContainer.querySelectorAll("button"));
+    const dots = dotsContainer ? Array.from(dotsContainer.querySelectorAll("button")) : [];
 
-  function updateDots() {
-    dots.forEach((d, i) => d.classList.toggle("is-active", i === current));
-  }
+    function updateDots() {
+      dots.forEach((d, i) => d.classList.toggle("is-active", i === current));
+    }
 
-  function goToSlide(index, stopAuto = false) {
-    current = (index + slides.length) % slides.length;
-    track.style.transform = `translateX(-${current * 100}%)`;
-    updateDots();
-    if (stopAuto) resetAuto();
-  }
+    function goToSlide(index, stopAuto = false) {
+      current = (index + slides.length) % slides.length;
+      track.style.transition = "transform 0.7s cubic-bezier(0.22, 0.61, 0.36, 1)";
+      track.style.transform = `translateX(-${current * 100}%)`;
+      updateDots();
+      if (stopAuto) resetAuto();
+    }
 
-  function startAuto() {
-    autoTimer = setInterval(() => goToSlide(current + 1, false), 6000);
-  }
+    function startAuto() {
+      if (autoTimer) clearInterval(autoTimer);
+      autoTimer = setInterval(() => goToSlide(current + 1, false), 6000);
+    }
 
-  function resetAuto() {
-    if (autoTimer) clearInterval(autoTimer);
+    function resetAuto() {
+      if (autoTimer) clearInterval(autoTimer);
+      startAuto();
+    }
+
+    // Drag / Swipe logic
+    function handleStart(e) {
+      if (e.type === "mousedown") e.preventDefault(); // Evita drag nativo de imagen
+      isDragging = true;
+      startX = e.type.includes("mouse") ? e.pageX : e.touches[0].clientX;
+      currentX = startX;
+      track.style.transition = "none";
+      if (autoTimer) clearInterval(autoTimer);
+    }
+
+    function handleMove(e) {
+      if (!isDragging) return;
+      currentX = e.type.includes("mouse") ? e.pageX : e.touches[0].clientX;
+      const diff = currentX - startX;
+      const moveX = -(current * 100) + (diff / track.offsetWidth) * 100;
+      track.style.transform = `translateX(${moveX}%)`;
+    }
+
+    function handleEnd() {
+      if (!isDragging) return;
+      isDragging = false;
+      const diff = currentX - startX;
+      if (Math.abs(diff) > 50) {
+        if (diff > 0) goToSlide(current - 1);
+        else goToSlide(current + 1);
+      } else {
+        goToSlide(current);
+      }
+      startAuto();
+    }
+
+    // Events
+    track.addEventListener("mousedown", handleStart);
+    track.addEventListener("touchstart", handleStart, { passive: true });
+
+    // We add these to the track or window? 
+    // The previous implementation added some to window to catch releases outside.
+    // Keeping it mostly as is but scope-friendly.
+
+    // To avoid multiple window listeners for different tracks causing confusion,
+    // let's use the track instance where possible or handle globally.
+    // For now, attaching to track for drag end/move if mouse/touch is inside.
+
+    track.addEventListener("mousemove", (e) => handleMove(e));
+    track.addEventListener("mouseup", () => handleEnd());
+    track.addEventListener("mouseleave", () => {
+      if (isDragging) handleEnd();
+      else resetAuto();
+    });
+
+    track.addEventListener("touchmove", (e) => handleMove(e), { passive: true });
+    track.addEventListener("touchend", () => handleEnd());
+
+    track.addEventListener("mouseenter", () => {
+      if (autoTimer) clearInterval(autoTimer);
+    });
+
     startAuto();
-  }
-
-  track.addEventListener("mouseenter", () => {
-    if (autoTimer) clearInterval(autoTimer);
   });
-
-  track.addEventListener("mouseleave", () => {
-    resetAuto();
-  });
-
-  startAuto();
 }
 
 // ===================== CARRUSELES DE CATEGORÍAS (cat-carousel con swipe y 1-a-1) =====================
 function initCatCarousel(root) {
   const track = root.querySelector(".cat-track");
-  const items = track ? Array.from(track.querySelectorAll(".cat-item")) : [];
+  const items = track ? Array.from(track.querySelectorAll(".cat-item, .cat-item-banner")) : [];
   const dotsContainer = root.querySelector(".cat-dots");
 
-  if (!track || items.length === 0 || !dotsContainer) return;
+  if (!track || items.length === 0) return;
 
   let currentIndex = 0;
   let startX = 0;
@@ -1008,10 +1119,12 @@ function initCatCarousel(root) {
 
   function getTotalSlides() {
     const perView = getItemsPerView();
+    // Allow sliding all items
     return Math.max(1, items.length - perView + 1);
   }
 
   function renderDots() {
+    if (!dotsContainer) return;
     const total = getTotalSlides();
     dotsContainer.innerHTML = "";
     for (let i = 0; i < total; i++) {
@@ -1029,28 +1142,31 @@ function initCatCarousel(root) {
     track.style.transition = "transform 0.6s cubic-bezier(0.22, 0.61, 0.36, 1)";
     track.style.transform = `translateX(${offset}px)`;
 
-    const dots = dotsContainer.querySelectorAll("button");
-    dots.forEach((d, i) => d.classList.toggle("active", i === currentIndex));
+    if (dotsContainer) {
+      const dots = dotsContainer.querySelectorAll("button");
+      dots.forEach((d, i) => d.classList.toggle("active", i === currentIndex));
+    }
 
     if (stopAuto) startAuto();
   }
 
-  function handleTouchStart(e) {
-    startX = e.touches[0].clientX;
+  function handleStart(e) {
+    if (e.type === "mousedown") e.preventDefault(); // Evita drag nativo de imagen
+    startX = e.type.includes("mouse") ? e.pageX : e.touches[0].clientX;
     isDragging = true;
     track.style.transition = "none";
     if (autoTimer) clearInterval(autoTimer);
   }
 
-  function handleTouchMove(e) {
+  function handleMove(e) {
     if (!isDragging) return;
-    currentX = e.touches[0].clientX;
+    currentX = e.type.includes("mouse") ? e.pageX : e.touches[0].clientX;
     const diff = currentX - startX;
     const offset = -(currentIndex * getItemWidth()) + diff;
     track.style.transform = `translateX(${offset}px)`;
   }
 
-  function handleTouchEnd() {
+  function handleEnd() {
     if (!isDragging) return;
     isDragging = false;
     const diff = currentX - startX;
@@ -1072,9 +1188,19 @@ function initCatCarousel(root) {
     }, 5000);
   }
 
-  track.addEventListener("touchstart", handleTouchStart, { passive: true });
-  track.addEventListener("touchmove", handleTouchMove, { passive: true });
-  track.addEventListener("touchend", handleTouchEnd);
+  // Mouse Events
+  track.addEventListener("mousedown", handleStart);
+  window.addEventListener("mousemove", (e) => {
+    if (isDragging) handleMove(e);
+  });
+  window.addEventListener("mouseup", () => {
+    if (isDragging) handleEnd();
+  });
+
+  // Touch Events
+  track.addEventListener("touchstart", handleStart, { passive: true });
+  track.addEventListener("touchmove", handleMove, { passive: true });
+  track.addEventListener("touchend", handleEnd);
 
   window.addEventListener("resize", () => {
     renderDots();
@@ -1152,7 +1278,7 @@ function initBeneficiosParallax() {
       const rect = layer.getBoundingClientRect();
       const elementTop = scrollY + rect.top;
 
-      const speed = 0.5;
+      const speed = 0.45;
       const offset = (scrollY - elementTop) * speed;
 
       layer.style.transform = `translate3d(0, ${offset}px, 0) scale(1.08)`;
@@ -1198,7 +1324,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initOfertas();
   initOfertasParallax();
 
-   // 🆕 CARRUSEL DE FONDOS CADA 1 MINUTO
+  // 🆕 CARRUSEL DE FONDOS CADA 1 MINUTO
   initBannerBackgroundCarousel();
 
   // Banner + beneficios
@@ -1210,8 +1336,15 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll(".cat-carousel").forEach(initCatCarousel);
   });
 
-  // Parallax beneficios
+  // Desbloquear carruseles
   initBeneficiosParallax();
+
+  // Desabilita arrastre nativo en todas las imágenes de carruseles
+  document.querySelectorAll('img').forEach(img => {
+    img.setAttribute('draggable', 'false');
+    // Prevenir el guardado accidental de imágenes al arrastrar en algunos navegadores
+    img.addEventListener('dragstart', (e) => e.preventDefault());
+  });
 });
 
 // ===================== CARRUSEL DE FONDOS RETRO (1 minuto) =====================
@@ -1221,9 +1354,9 @@ function initBannerBackgroundCarousel() {
       element: document.querySelector('.ofertas-bg-productos'),
       images: [
         'img/Inicio/6.png',  // Moderna
-         'img/Inicio/retro/1.png',
-         'img/Inicio/retro/4.png',
-         'img/Inicio/retro/7.png',
+        'img/Inicio/retro/1.png',
+        'img/Inicio/retro/4.png',
+        'img/Inicio/retro/7.png',
       ],
       currentIndex: 0
     },
@@ -1231,9 +1364,9 @@ function initBannerBackgroundCarousel() {
       element: document.querySelector('.ofertas-bg-servicios'),
       images: [
         'img/Inicio/7.png',
-        'img/Inicio/retro/2.png',  
-        'img/Inicio/retro/5.png',  
-        'img/Inicio/retro/8.png', 
+        'img/Inicio/retro/2.png',
+        'img/Inicio/retro/5.png',
+        'img/Inicio/retro/8.png',
       ],
       currentIndex: 0
     },
@@ -1250,15 +1383,15 @@ function initBannerBackgroundCarousel() {
   };
 
   function changeBackground(wrapper) {
-    if (! wrapper. element) return;
-    
+    if (!wrapper.element) return;
+
     wrapper.currentIndex = (wrapper.currentIndex + 1) % wrapper.images.length;
-    const nextImage = wrapper.images[wrapper. currentIndex];
-    
+    const nextImage = wrapper.images[wrapper.currentIndex];
+
     // Transición suave
     wrapper.element.style.transition = 'opacity 1s ease-in-out';
     wrapper.element.style.opacity = '0';
-    
+
     setTimeout(() => {
       wrapper.element.style.backgroundImage = `url('${nextImage}')`;
       wrapper.element.style.opacity = '1';

@@ -102,9 +102,7 @@ html {
     scroll-padding-top: 160px;
 }
 
-body {
-    font-family: 'Outfit', sans-serif;
-}
+/* font-family: 'Outfit', sans-serif; -- Aplicado globalmente en index.css */
 
 /* =================== LEGACY STYLES (mantener compatibilidad) =================== */
 

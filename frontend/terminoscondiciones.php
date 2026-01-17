@@ -1,20 +1,10 @@
 <?php
-session_start();
-session_destroy();
+include 'header.php';
 ?>
-<!DOCTYPE html>
-<html lang="es">
-
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Términos y Condiciones - Lyrium Biomarketplace</title>
-  <link rel="stylesheet" href="utils/css/terminoscondiciones.css">
-  <link rel="stylesheet" href="utils/css/ly-pagehead.css">
-  <link rel="stylesheet" href="utils/css/mobile-popup.css">
-  <link rel="stylesheet" href="utils/css/share-modal.css">
-
-  <?php include 'header.php'; ?>
+<link rel="stylesheet" href="utils/css/terminoscondiciones.css">
+<link rel="stylesheet" href="utils/css/ly-pagehead.css">
+<link rel="stylesheet" href="utils/css/mobile-popup.css">
+<link rel="stylesheet" href="utils/css/share-modal.css">
 
   <main class="max-w-7xl mx-auto px-4 py-10 flex-1 space-y-10">
 
@@ -239,8 +229,6 @@ session_destroy();
     </div>
   </div>
 
-  <?php include 'footer.php'; ?>
-
   <!-- Scripts al final para asegurar que el DOM (incluido el popup) esté listo -->
   <script src="utils/js/terminoscondiciones.js?v=1.1"></script>
   <script src="utils/js/mobile-popup.js?v=1.1"></script>
@@ -279,3 +267,5 @@ session_destroy();
       </div>
     </div>
   </div>
+
+  <?php include 'footer.php'; ?>

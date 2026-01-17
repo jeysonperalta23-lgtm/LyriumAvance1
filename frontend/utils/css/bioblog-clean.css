@@ -1,0 +1,57 @@
+/* Fuentes Personalizadas BioBlog */
+@font-face {
+    font-family: 'Gilroy-Bold';
+    font-style: normal;
+    font-weight: 600;
+    src: url('https://lyriumbiomarketplace.com/wp-content/uploads/2025/05/Gilroy-Bold.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Gilroy-Bold';
+    font-style: normal;
+    font-weight: 900;
+    src: url('https://lyriumbiomarketplace.com/wp-content/uploads/2025/05/Gilroy-Heavy.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Gilroy-Bold';
+    font-style: normal;
+    font-weight: 300;
+    src: url('https://lyriumbiomarketplace.com/wp-content/uploads/2025/05/Gilroy-Light.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Gilroy-Bold';
+    font-style: normal;
+    font-weight: 500;
+    src: url('https://lyriumbiomarketplace.com/wp-content/uploads/2025/05/Gilroy-Regular.ttf') format('truetype');
+}
+
+/* Reset específico Wrapper para compatibilidad */
+#bioblog-wrapper {
+    font-size: 100%;
+}
+
+/* Scrollbar Hide (Utilidad) */
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
+
+.scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+/* Fix Visibility Issues */
+body #bioblog-wrapper {
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: block !important;
+}
+
+/* Override animations if they fail to trigger */
+#bioblog-wrapper .animate-in {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+}
